@@ -1,0 +1,49 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Video'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {{ forms.lightswitchField({
+        label: 'YouTube facade'|t('cookie-consent-kit'),
+        instructions: 'YouTube videos load only when the visitor clicks, so nothing reaches Google beforehand — the click is the consent, for that video alone. Only YouTube is covered: videos hosted elsewhere are untouched by this setting, and each template is responsible for them. Turning this off embeds YouTube directly, which lets Google set cookies as soon as the page is displayed, without any consent.'|t('cookie-consent-kit'),
+        id: 'videoFacade',
+        name: 'videoFacade',
+        on: settings.videoFacade,
+        toggle: 'videoFacadeFields',
+        disabled: overrides.videoFacade is defined,
+        warning: overrides.videoFacade is defined
+            ? helper.lockNote(overrides, 'videoFacade')
+            : (settings.videoFacade ? null : 'YouTube videos currently load without consent.'|t('cookie-consent-kit')),
+    }) }}
+
+    {# Shown only while the facade is on: without it there is no poster to
+       fetch and nothing to lift, so both settings would be noise. #}
+    <div id="videoFacadeFields"{% if not settings.videoFacade %} class="hidden"{% endif %}>
+        {{ forms.lightswitchField({
+            label: 'YouTube thumbnails'|t('cookie-consent-kit'),
+            instructions: 'Show the real thumbnail on the facade. The server fetches it from YouTube once, caches it, and serves it from this domain — the visitor never contacts Google before clicking. Turning this off falls back to a plain gradient.'|t('cookie-consent-kit'),
+            id: 'videoThumbnails',
+            name: 'videoThumbnails',
+            on: settings.videoThumbnails,
+            disabled: overrides.videoThumbnails is defined,
+            warning: helper.lockNote(overrides, 'videoThumbnails'),
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Category that lifts the facade'|t('cookie-consent-kit'),
+            instructions: 'A visitor who accepted this category gets the video loaded outright, without clicking. Left on “No category”, the facade always applies — which is the safer answer: consent for a category is broader than consent for one video, and Law 25 asks for specific consent. Withdrawing consent restores the facade on the next page load; a player already on screen stays.'|t('cookie-consent-kit'),
+            id: 'videoConsentCategory',
+            name: 'videoConsentCategory',
+            options: categoryOptions,
+            value: settings.videoConsentCategory,
+            errors: settings.getErrors('videoConsentCategory'),
+            disabled: overrides.videoConsentCategory is defined,
+            warning: helper.lockNote(overrides, 'videoConsentCategory'),
+        }) }}
+    </div>
+
+{% endblock %}

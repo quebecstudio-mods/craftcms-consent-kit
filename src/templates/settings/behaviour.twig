@@ -1,0 +1,61 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Behaviour'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+
+    {{ forms.lightswitchField({
+        label: 'Reopen tab'|t('cookie-consent-kit'),
+        instructions: 'Small tab shown once the visitor has decided, so the banner can be reopened. Required for compliance — withdrawal must be as easy as consent. Turn it off only if the site provides its own entry point calling window.qsmConsentKit.open().'|t('cookie-consent-kit'),
+        id: 'reopenButton',
+        name: 'reopenButton',
+        on: settings.reopenButton,
+        disabled: overrides.reopenButton is defined,
+        warning: helper.lockNote(overrides, 'reopenButton'),
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Reopen tab position'|t('cookie-consent-kit'),
+        instructions: 'Bottom edge of the screen, on this side. “Auto” follows the display mode: on the right for a bottom right corner, on the left otherwise.'|t('cookie-consent-kit'),
+        id: 'reopenPosition',
+        name: 'reopenPosition',
+        options: [
+            { label: 'Auto'|t('cookie-consent-kit'), value: 'auto' },
+            { label: 'Left'|t('cookie-consent-kit'), value: 'left' },
+            { label: 'Right'|t('cookie-consent-kit'), value: 'right' },
+        ],
+        value: settings.reopenPosition,
+        errors: settings.getErrors('reopenPosition'),
+        disabled: overrides.reopenPosition is defined,
+        warning: helper.lockNote(overrides, 'reopenPosition'),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Skip the banner on a Global Privacy Control refusal'|t('cookie-consent-kit'),
+        instructions: 'Some browsers send a signal meaning “I refuse optional cookies”. That refusal is always honoured: optional categories start off, and nothing is set before consent. This setting only decides whether the banner still asks. Turn it off to keep telling every visitor what the site uses. With the banner skipped, a visitor changes their mind from the reopen tab — so keep that tab on, or provide your own entry point.'|t('cookie-consent-kit'),
+        id: 'gpcHidesBanner',
+        name: 'gpcHidesBanner',
+        on: settings.gpcHidesBanner,
+        disabled: overrides.gpcHidesBanner is defined,
+        warning: overrides.gpcHidesBanner is defined
+            ? helper.lockNote(overrides, 'gpcHidesBanner')
+            : (settings.gpcHidesBanner and not settings.reopenButton
+                ? 'The banner is skipped for these visitors and the reopen tab is off, so they have no way to accept unless the site provides its own entry point.'|t('cookie-consent-kit')
+                : null),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Automatic injection'|t('cookie-consent-kit'),
+        instructions: 'Places the banner as the first child of <body>, without touching any template. Turn this off only if the site needs to position it itself. The <head> bootstrap always stays automatic.'|t('cookie-consent-kit'),
+        id: 'autoInject',
+        name: 'autoInject',
+        on: settings.autoInject,
+        disabled: overrides.autoInject is defined,
+        warning: helper.lockNote(overrides, 'autoInject'),
+    }) }}
+
+{% endblock %}

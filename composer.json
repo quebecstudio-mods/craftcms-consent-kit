@@ -1,0 +1,73 @@
+{
+    "name": "quebecstudio-mods/craftcms-consent-kit",
+    "description": "Opt-in cookie consent for Craft CMS: no third-party cookie, script or embed loads before the visitor agrees. Built for Quebec's Law 25 and the GDPR.",
+    "type": "craft-plugin",
+    "license": "proprietary",
+    "keywords": [
+        "craft",
+        "craftcms",
+        "craft-plugin",
+        "consent",
+        "cookies",
+        "loi25",
+        "rgpd"
+    ],
+    "authors": [
+        {
+            "name": "Québec Studio",
+            "homepage": "https://quebecstudio.com"
+        }
+    ],
+    "support": {
+        "email": "info@quebecstudio.com",
+        "issues": "https://github.com/quebecstudio-mods/craftcms-consent-kit/issues",
+        "source": "https://github.com/quebecstudio-mods/craftcms-consent-kit",
+        "docs": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/5.x/README.md"
+    },
+    "require": {
+        "php": ">=8.2",
+        "craftcms/cms": "^5.0.0",
+        "quebecstudio-mods/consent-kit-core": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "QuebecStudioMods\\ConsentKit\\CraftCms\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "cookie-consent-kit",
+        "name": "Cookie Consent Kit",
+        "description": "Opt-in cookie consent for Craft CMS: no third-party cookie, script or embed loads before the visitor agrees. Built for Quebec's Law 25 and the GDPR.",
+        "developer": "Québec Studio Mods",
+        "developerUrl": "https://github.com/quebecstudio-mods",
+        "developerEmail": "info@quebecstudio.com",
+        "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/5.x/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/quebecstudio-mods/craftcms-consent-kit/5.x/CHANGELOG.md",
+        "class": "QuebecStudioMods\\ConsentKit\\CraftCms\\Plugin",
+        "branch-alias": {
+            "dev-5.x": "5.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    },
+    "require-dev": {
+        "craftcms/phpstan": "dev-main",
+        "laravel/pint": "^1.32",
+        "phpstan/phpstan": "^2.2",
+        "rector/rector": "^2.6"
+    },
+    "scripts": {
+        "style": "@php vendor/bin/pint --test",
+        "stan": "@php -d memory_limit=512M vendor/bin/phpstan analyse --no-progress",
+        "check": [
+            "@style",
+            "@stan"
+        ],
+        "refactor": "@php -d memory_limit=512M vendor/bin/rector process --dry-run"
+    }
+}

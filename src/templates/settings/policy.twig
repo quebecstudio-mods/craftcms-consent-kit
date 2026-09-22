@@ -1,0 +1,76 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Privacy policy'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {#
+        A per-site setting declared in the config file locks only the sites it
+        actually covers: a plain value covers all of them, a map only its own
+        keys.
+    #}
+    {% set locked = {} %}
+
+    {% for key in ['policySource', 'policyEntry', 'policyUrl'] %}
+        {% if overrides[key] is defined
+            and (overrides[key] is not iterable or overrides[key][selectedSite.id] is defined) %}
+            {% set locked = locked|merge({ (key): true }) %}
+        {% endif %}
+    {% endfor %}
+
+    {{ forms.selectField({
+        label: 'Link to'|t('cookie-consent-kit'),
+        id: 'policySource',
+        name: 'policySource[' ~ selectedSite.id ~ ']',
+        options: [
+            { label: 'A page on this site'|t('cookie-consent-kit'), value: 'entry' },
+            { label: 'A custom URL'|t('cookie-consent-kit'), value: 'url' },
+        ],
+        value: policySourceValue,
+        toggle: true,
+        targetPrefix: 'policy-',
+        disabled: locked.policySource is defined,
+        warning: helper.lockNote(locked, 'policySource'),
+        translatable: multisite,
+        translationDescription: 'This choice is made per site.'|t('cookie-consent-kit'),
+    }) }}
+
+    <div id="policy-entry" class="{{ policySourceValue == 'entry' ? '' : 'hidden' }}">
+        {{ forms.elementSelectField({
+            label: 'Privacy policy page'|t('cookie-consent-kit'),
+            instructions: 'The link follows the slug if the page is renamed.'|t('cookie-consent-kit'),
+            id: 'policyEntry',
+            name: 'policyEntry[' ~ selectedSite.id ~ ']',
+            elementType: 'craft\\elements\\Entry',
+            selectionLabel: 'Choose a page'|t('cookie-consent-kit'),
+            limit: 1,
+            criteria: { siteId: selectedSite.id },
+            elements: policyEntryElements,
+            disabled: locked.policyEntry is defined,
+            warning: helper.lockNote(locked, 'policyEntry'),
+            translatable: multisite,
+            translationDescription: 'This choice is made per site.'|t('cookie-consent-kit'),
+        }) }}
+    </div>
+
+    <div id="policy-url" class="{{ policySourceValue == 'url' ? '' : 'hidden' }}">
+        {{ forms.autosuggestField({
+            label: 'Privacy policy URL'|t('cookie-consent-kit'),
+            instructions: 'For a page outside Craft, or an environment variable.'|t('cookie-consent-kit'),
+            id: 'policyUrl',
+            name: 'policyUrl[' ~ selectedSite.id ~ ']',
+            value: policyUrlValue,
+            suggestEnvVars: true,
+            suggestions: craft.cp.getEnvSuggestions(),
+            errors: settings.getErrors('policyUrl'),
+            disabled: locked.policyUrl is defined,
+            warning: helper.lockNote(locked, 'policyUrl'),
+            translatable: multisite,
+            translationDescription: 'This choice is made per site.'|t('cookie-consent-kit'),
+        }) }}
+    </div>
+
+{% endblock %}

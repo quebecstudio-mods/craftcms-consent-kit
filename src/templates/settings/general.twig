@@ -1,0 +1,35 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'General'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {{ forms.textField({
+        label: 'Plugin name'|t('cookie-consent-kit'),
+        instructions: 'Shown in the control panel. Leave it empty to use the plugin name.'|t('cookie-consent-kit'),
+        id: 'pluginName',
+        name: 'pluginName',
+        value: settings.pluginName,
+        placeholder: 'Cookie Consent Kit',
+        errors: settings.getErrors('pluginName'),
+        disabled: overrides.pluginName is defined,
+        warning: helper.lockNote(overrides, 'pluginName'),
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Fallback language'|t('cookie-consent-kit'),
+        instructions: 'Used when the current locale has no wording. The list holds the languages the plugin ships with, plus any the site adds in translations/vendor/cookie-consent-kit.'|t('cookie-consent-kit'),
+        id: 'defaultLanguage',
+        name: 'defaultLanguage',
+        options: languageOptions,
+        value: settings.defaultLanguage,
+        errors: settings.getErrors('defaultLanguage'),
+        disabled: overrides.defaultLanguage is defined,
+        warning: helper.lockNote(overrides, 'defaultLanguage'),
+        required: true,
+    }) }}
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Consent cookie'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {{ forms.autosuggestField({
+        label: 'Cookie name'|t('cookie-consent-kit'),
+        instructions: 'Name of the cookie that remembers the visitor’s choice. Renaming it invalidates existing consents — bump the policy version at the same time.'|t('cookie-consent-kit'),
+        id: 'cookieName',
+        name: 'cookieName',
+        value: settings.cookieName,
+        suggestEnvVars: true,
+        suggestions: craft.cp.getEnvSuggestions(),
+        errors: settings.getErrors('cookieName'),
+        disabled: overrides.cookieName is defined,
+        warning: helper.lockNote(overrides, 'cookieName'),
+        required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: 'Lifetime'|t('cookie-consent-kit'),
+        instructions: 'In seconds. 15,552,000 is 180 days.'|t('cookie-consent-kit'),
+        id: 'cookieMaxAge',
+        name: 'cookieMaxAge',
+        type: 'number',
+        value: settings.cookieMaxAge,
+        errors: settings.getErrors('cookieMaxAge'),
+        disabled: overrides.cookieMaxAge is defined,
+        warning: helper.lockNote(overrides, 'cookieMaxAge'),
+    }) }}
+
+    {{ forms.textField({
+        label: 'Policy version'|t('cookie-consent-kit'),
+        instructions: 'Bump this when a cookie appears in a non-necessary category, a category is added, or a purpose changes. Visitors will then be asked again.'|t('cookie-consent-kit'),
+        id: 'version',
+        name: 'version',
+        type: 'number',
+        value: settings.version,
+        errors: settings.getErrors('version'),
+        disabled: overrides.version is defined,
+        warning: helper.lockNote(overrides, 'version'),
+    }) }}
+
+{% endblock %}

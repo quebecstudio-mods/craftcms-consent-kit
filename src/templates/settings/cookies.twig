@@ -1,0 +1,230 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Cookie inventory'|t('cookie-consent-kit') %}
+{% set copyTarget = 'inventory' %}
+
+{% block pane %}
+
+    <div class="readable">
+        <blockquote class="note tip">
+            <p>{{ 'This inventory is a compliance record: it must reflect what the site actually sets. A category with no declared cookie is not shown in the banner.'|t('cookie-consent-kit') }}</p>
+        </blockquote>
+    </div>
+
+    <table class="data fullwidth" style="margin-bottom:24px">
+        <thead>
+            <tr>
+                <th>{{ 'Category'|t('cookie-consent-kit') }}</th>
+                <th>{{ 'Cookies'|t('cookie-consent-kit') }}</th>
+                <th>{{ 'In the banner'|t('cookie-consent-kit') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categoryStatus %}
+                <tr>
+                    <td>{{ category.label }} <code>{{ category.handle }}</code></td>
+                    <td>{{ category.cookies|length }}</td>
+                    <td>
+                        {%- if category.visible -%}
+                            {{ 'Shown'|t('cookie-consent-kit') }}
+                            {%- if category.required %} — {{ 'always on'|t('cookie-consent-kit') }}{% endif -%}
+                        {%- else -%}
+                            <span class="light">{{ 'Hidden — no cookie declared'|t('cookie-consent-kit') }}</span>
+                        {%- endif -%}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if overrides.categories is defined %}
+        <p class="warning">
+            {{ 'The inventory is defined in config/cookie-consent-kit.php and cannot be edited here.'|t('cookie-consent-kit') }}
+        </p>
+    {% else %}
+        <p class="light">
+            {{ 'Wording is stored per site. Only the selected site is edited here; the others are preserved when you save.'|t('cookie-consent-kit') }}
+            {{ 'A handle identifies a cookie across every site, and survives a change of technical name. Leave it empty and one is derived from the name.'|t('cookie-consent-kit') }}
+        </p>
+
+        {% for category in editableCategories %}
+            <div class="pane" style="margin-bottom:24px" data-qsm-ck-category="{{ category.handle }}">
+                <div class="flex flex-nowrap" style="justify-content:space-between;align-items:flex-start">
+                    <h2>
+                        {{ category.label ?: category.handle }}
+                        <code>{{ category.handle }}</code>
+                        {%- if category.required %} <span class="light">{{ '— always on'|t('cookie-consent-kit') }}</span>{% endif %}
+                    </h2>
+
+                    {# `necessary` stays: it is what the banner shows to a
+                       visitor who has accepted nothing. #}
+                    {% if not category.required %}
+                        <button type="submit"
+                                class="btn small"
+                                name="deleteCategory"
+                                value="{{ category.handle }}"
+                                data-qsm-ck-delete-category="{{ category.label ?: category.handle }}">{{ 'Delete'|t('cookie-consent-kit') }}</button>
+                    {% endif %}
+                </div>
+
+                {{ forms.textField({
+                    label: 'Label'|t('cookie-consent-kit'),
+                    id: 'category-' ~ category.handle ~ '-label',
+                    name: 'categories[' ~ category.handle ~ '][label]',
+                    value: category.label,
+                    inputAttributes: { data: { 'qsm-ck-category-field': 'label' } },
+                }) }}
+
+                {{ forms.textareaField({
+                    label: 'Description'|t('cookie-consent-kit'),
+                    instructions: 'Shown under the category in the manage panel.'|t('cookie-consent-kit'),
+                    id: 'category-' ~ category.handle ~ '-description',
+                    name: 'categories[' ~ category.handle ~ '][description]',
+                    value: category.description,
+                    rows: 2,
+                    inputAttributes: { data: { 'qsm-ck-category-field': 'description' } },
+                }) }}
+
+                {{ forms.editableTableField({
+                    label: 'Cookies'|t('cookie-consent-kit'),
+                    id: 'category-' ~ category.handle ~ '-cookies',
+                    name: 'categories[' ~ category.handle ~ '][cookies]',
+                    cols: cookieCols,
+                    rows: category.rows,
+                    addRowLabel: 'Add a cookie'|t('cookie-consent-kit'),
+                    allowAdd: true,
+                    allowDelete: true,
+                    allowReorder: true,
+                }) }}
+            </div>
+        {% endfor %}
+
+        <div class="pane" style="margin-bottom:24px">
+            <h2>{{ 'Add a category'|t('cookie-consent-kit') }}</h2>
+
+            <p class="light">
+                {{ 'A category with no declared cookie stays hidden, so adding one costs nothing until it is used. Its handle is permanent: the consent cookie stores it, and renaming it would strand every consent already given.'|t('cookie-consent-kit') }}
+            </p>
+
+            <div class="flex flex-nowrap">
+                {{ forms.text({
+                    name: 'newCategory[label]',
+                    placeholder: 'Label'|t('cookie-consent-kit'),
+                }) }}
+
+                {{ forms.text({
+                    name: 'newCategory[handle]',
+                    class: 'code',
+                    placeholder: 'handle'|t('cookie-consent-kit'),
+                }) }}
+
+                <button type="submit" class="btn" name="addCategory" value="1">{{ 'Add'|t('cookie-consent-kit') }}</button>
+            </div>
+        </div>
+
+        {# Deleting is a submit like any other, so the rest of the screen is
+           saved rather than lost — hence a confirmation of its own. #}
+        {% js %}
+            (function () {
+                document.querySelectorAll('[data-qsm-ck-delete-category]').forEach(function (button) {
+                    button.addEventListener('click', function (event) {
+                        if (!confirm({{ 'Delete the category “{name}”? Its cookies go with it. Visitors who accepted it keep that in their consent cookie until the policy version is bumped, and any tag marked with its handle stops being activated.'|t('cookie-consent-kit')|json_encode|raw }}.replace('{name}', button.dataset.qsmDeleteCategory))) {
+                            event.preventDefault();
+                        }
+                    });
+                });
+            })();
+        {% endjs %}
+
+        {% if otherSites|length %}
+            {# The cookie rows are an editable table, so a row is found by the
+               handle in its own first column rather than by position: the
+               order differs from one site to the next only if someone
+               reordered it, and the handle is what identifies either way. #}
+            {% js %}
+                (function () {
+                    var inventory = {{ inventoryFromSites|json_encode(constant('JSON_HEX_TAG') b-or constant('JSON_HEX_AMP'))|raw }};
+
+                    // Bound on each item: Craft stops the click from bubbling
+                    // when it closes the menu.
+                    document.querySelectorAll('[data-qsm-ck-copy="inventory"]').forEach(function (item) {
+                    item.addEventListener('click', function (event) {
+                        event.preventDefault();
+
+                        var source = inventory[item.dataset.qsmCopySource];
+
+                        if (!source || !confirm({{ 'Replace the wording on this screen with {site}’s? Nothing is saved until you click Save.'|t('cookie-consent-kit')|json_encode|raw }}.replace('{site}', item.textContent.trim()))) {
+                            return;
+                        }
+
+                        document.querySelectorAll('[data-qsm-ck-category]').forEach(function (block) {
+                            var category = source[block.dataset.qsmCategory];
+
+                            if (!category) {
+                                return;
+                            }
+
+                            block.querySelectorAll('[data-qsm-ck-category-field]').forEach(function (field) {
+                                field.value = category[field.dataset.qsmCategoryField] || '';
+                            });
+
+                            block.querySelectorAll('tbody tr').forEach(function (row) {
+                                var handle = row.querySelector('[name*="[handle]"]');
+                                var cookie = handle && category.cookies[handle.value];
+
+                                if (!cookie) {
+                                    return;
+                                }
+
+                                ['purpose', 'duration'].forEach(function (key) {
+                                    var cell = row.querySelector('[name*="[' + key + ']"]');
+
+                                    if (cell) {
+                                        cell.value = cookie[key] || '';
+                                    }
+                                });
+                            });
+                        });
+                    });
+                    });
+                })();
+            {% endjs %}
+        {% endif %}
+    {% endif %}
+
+    <hr>
+
+    <h2>{{ 'Measurement'|t('cookie-consent-kit') }}</h2>
+
+    <p class="light">
+        {{ 'Which category a visitor has to accept before Google Consent Mode and Matomo are granted. A site that measures nothing leaves both on “None”.'|t('cookie-consent-kit') }}
+    </p>
+
+    {{ forms.selectField({
+        label: 'Analytics category'|t('cookie-consent-kit'),
+        instructions: 'Drives Matomo and Google analytics_storage.'|t('cookie-consent-kit'),
+        id: 'analyticsCategory',
+        name: 'analyticsCategory',
+        options: categoryOptions,
+        value: settings.analyticsCategory,
+        errors: settings.getErrors('analyticsCategory'),
+        disabled: overrides.analyticsCategory is defined,
+        warning: helper.lockNote(overrides, 'analyticsCategory'),
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Marketing category'|t('cookie-consent-kit'),
+        instructions: 'Drives Google ad_storage, ad_user_data and ad_personalization.'|t('cookie-consent-kit'),
+        id: 'marketingCategory',
+        name: 'marketingCategory',
+        options: categoryOptions,
+        value: settings.marketingCategory,
+        errors: settings.getErrors('marketingCategory'),
+        disabled: overrides.marketingCategory is defined,
+        warning: helper.lockNote(overrides, 'marketingCategory'),
+    }) }}
+
+{% endblock %}

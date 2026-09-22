@@ -1,0 +1,172 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Appearance'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {{ forms.selectField({
+        label: 'Colour scheme'|t('cookie-consent-kit'),
+        instructions: '“Auto” follows the visitor’s system preference. The dark scheme uses the palette set through --qsm-ck-dark-*.'|t('cookie-consent-kit'),
+        id: 'colorScheme',
+        name: 'colorScheme',
+        options: [
+            { label: 'Auto (recommended)'|t('cookie-consent-kit'), value: 'auto' },
+            { label: 'Light'|t('cookie-consent-kit'), value: 'light' },
+            { label: 'Dark'|t('cookie-consent-kit'), value: 'dark' },
+        ],
+        value: settings.colorScheme,
+        errors: settings.getErrors('colorScheme'),
+        disabled: overrides.colorScheme is defined,
+        warning: helper.lockNote(overrides, 'colorScheme'),
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Panel backdrop'|t('cookie-consent-kit'),
+        instructions: 'Effect applied behind the “Manage” panel. Blur signals the modality without hiding the page.'|t('cookie-consent-kit'),
+        id: 'backdropStyle',
+        name: 'backdropStyle',
+        options: [
+            { label: 'Blur (recommended)'|t('cookie-consent-kit'), value: 'blur' },
+            { label: 'Dim'|t('cookie-consent-kit'), value: 'dim' },
+            { label: 'None'|t('cookie-consent-kit'), value: 'none' },
+        ],
+        value: settings.backdropStyle,
+        errors: settings.getErrors('backdropStyle'),
+        disabled: overrides.backdropStyle is defined,
+        warning: helper.lockNote(overrides, 'backdropStyle'),
+    }) }}
+
+    {{ forms.selectField({
+        label: 'Display mode'|t('cookie-consent-kit'),
+        instructions: 'Full width along the bottom, or a box: floating in the middle, or in a bottom corner. On a narrow screen every mode is full width.'|t('cookie-consent-kit'),
+        id: 'displayMode',
+        name: 'displayMode',
+        options: [
+            { label: 'Full width'|t('cookie-consent-kit'), value: 'full' },
+            { label: 'Floating box'|t('cookie-consent-kit'), value: 'floating' },
+            { label: 'Bottom left corner'|t('cookie-consent-kit'), value: 'corner-left' },
+            { label: 'Bottom right corner'|t('cookie-consent-kit'), value: 'corner-right' },
+        ],
+        value: settings.displayMode,
+        errors: settings.getErrors('displayMode'),
+        disabled: overrides.displayMode is defined,
+        warning: helper.lockNote(overrides, 'displayMode'),
+    }) }}
+
+    {{ forms.textField({
+        label: 'Template folder'|t('cookie-consent-kit'),
+        instructions: 'A template placed in this folder of the site overrides the plugin’s own. For example templates/_consent/banner.twig.'|t('cookie-consent-kit'),
+        id: 'templateRoot',
+        name: 'templateRoot',
+        value: settings.templateRoot,
+        errors: settings.getErrors('templateRoot'),
+        disabled: overrides.templateRoot is defined,
+        warning: helper.lockNote(overrides, 'templateRoot'),
+    }) }}
+
+    <hr>
+
+    <h2>{{ 'Inventory table'|t('cookie-consent-kit') }}</h2>
+
+    {# Craft only styles a note inside `.readable`, and a bare `note` is its
+       red one. Nothing here is a problem to fix. #}
+    <div class="readable">
+        <blockquote class="note tip">
+            <p>
+                {{ 'The cookie table can be shown in a page of the site — the privacy policy, most of the time. It has no style of its own: it takes on the style of the page around it.'|t('cookie-consent-kit') }}
+            </p>
+
+            <p>
+                {{ 'From a template:'|t('cookie-consent-kit') }}
+                <code>{{ '{{ craft.consent.cookieTable() }}' }}</code><br>
+                {{ 'From content, once the field goes through the filter:'|t('cookie-consent-kit') }}
+                <code>[cookie-table]</code>
+            </p>
+        </blockquote>
+    </div>
+
+    {{ forms.selectField({
+        label: 'CSS framework'|t('cookie-consent-kit'),
+        instructions: 'The shipped sets match one version of each framework. Custom writes your own.'|t('cookie-consent-kit'),
+        id: 'inventoryFramework',
+        name: 'inventoryFramework',
+        options: [{ label: 'None'|t('cookie-consent-kit'), value: '' }]
+            |merge(presetOptions)
+            |merge([{ label: 'Custom'|t('cookie-consent-kit'), value: 'custom' }]),
+        value: settings.inventoryFramework,
+        errors: settings.getErrors('inventoryFramework'),
+        disabled: overrides.inventoryFramework is defined,
+        warning: helper.lockNote(overrides, 'inventoryFramework'),
+        inputAttributes: { data: { 'qsm-ck-framework': '' } },
+    }) }}
+
+    {# Shown only for Custom: a preset's classes are its own, and editable
+       fields that do not drive the render would be a lie. #}
+    <div data-qsm-ck-custom-classes{% if settings.inventoryFramework != 'custom' %} class="hidden"{% endif %}>
+        {% if overrides.inventoryClasses is defined %}
+            <p class="warning">{{ helper.lockNote(overrides, 'inventoryClasses') }}</p>
+        {% else %}
+            {# Craft's own field grid: ten class boxes at full width would be a
+               page of nearly empty space. Its `width-50` is a flat 50% with no
+               media query behind it, so the stacking is ours. #}
+            {% css %}
+                @media (max-width: 900px) {
+                    #main-content .flex-fields > .field.width-50 {
+                        width: 100%;
+                    }
+                }
+            {% endcss %}
+
+            <div class="flex-fields">
+                {% for element, label in inventoryElementLabels %}
+                    {{ forms.textField({
+                        label: label,
+                        id: 'inventoryClasses-' ~ element,
+                        name: 'inventoryClasses[' ~ element ~ ']',
+                        value: settings.inventoryClasses[element] ?? '',
+                        class: 'code',
+                        fieldClass: 'width-50',
+                        inputAttributes: { data: { 'qsm-ck-class': element } },
+                    }) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {# Found by attribute rather than by id: the fields are namespaced, and
+       this script runs outside that namespace. #}
+    {% js %}
+        (function () {
+            var presets = {{ inventoryPresets|json_encode(constant('JSON_HEX_TAG') b-or constant('JSON_HEX_AMP'))|raw }};
+            var select = document.querySelector('[data-qsm-ck-framework]');
+            var fields = document.querySelector('[data-qsm-ck-custom-classes]');
+
+            if (!select || !fields) {
+                return;
+            }
+
+            select.addEventListener('change', function () {
+                var custom = select.value === 'custom';
+
+                fields.classList.toggle('hidden', !custom);
+
+                // Custom starts blank. Carrying the previous set over would
+                // blend two frameworks the moment one field is edited, and
+                // leave classes nobody chose to write.
+                if (custom) {
+                    document.querySelectorAll('[data-qsm-ck-class]').forEach(function (field) {
+                        field.value = '';
+                    });
+                }
+
+                select.dataset.qsmPrevious = select.value;
+            });
+
+            select.dataset.qsmPrevious = select.value;
+        })();
+    {% endjs %}
+
+{% endblock %}

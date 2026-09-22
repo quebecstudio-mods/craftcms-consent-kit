@@ -1,0 +1,112 @@
+{#
+    Shared wrapper for the settings panes. Since this is not Craft's generic
+    plugin settings screen, the form supplies the action, the plugin handle and
+    the `settings[...]` namespacing itself.
+#}
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+
+{# No save button when nothing can be saved: the settings live in the project
+   config, which `allowAdminChanges` closes in production. #}
+{% set fullPageForm = not readOnly %}
+{% set docTitle = title ~ ' - ' ~ pluginName %}
+
+{# The `site` param is carried everywhere: it drives the edited language. #}
+{% set siteParam = multisite and selectedSite ? { site: selectedSite.handle } : {} %}
+
+{% set crumbs = [
+    { label: pluginName, url: url('cookie-consent-kit/settings', siteParam) },
+    { label: title, url: url('cookie-consent-kit/settings/' ~ pane, siteParam) },
+] %}
+
+{% if multisite %}
+    {% set siteItems = siteMenuItems(selectableSites, selectedSite) %}
+
+    {% if siteItems|length %}
+        {% set crumbs = crumbs|unshift({
+            id: 'site-crumb',
+            icon: 'world',
+            iconAltText: 'Site'|t('app'),
+            label: selectedSite.name|t('site'),
+            menu: { items: siteItems, label: 'Select site'|t('app') },
+        }) %}
+    {% endif %}
+{% endif %}
+
+{# Ordered as a site is actually configured: what the install needs first, then
+   what the law requires (the policy link, then the inventory that makes
+   categories appear), then how the banner behaves, reads and looks. #}
+{% set panes = {
+    general: 'General'|t('cookie-consent-kit'),
+    cookie: 'Consent cookie'|t('cookie-consent-kit'),
+    policy: 'Privacy policy'|t('cookie-consent-kit'),
+    cookies: 'Cookie inventory'|t('cookie-consent-kit'),
+    behaviour: 'Behaviour'|t('cookie-consent-kit'),
+    video: 'Video'|t('cookie-consent-kit'),
+    appearance: 'Appearance'|t('cookie-consent-kit'),
+} %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            {% for handle, label in panes %}
+                <li>
+                    <a href="{{ url('cookie-consent-kit/settings/' ~ handle, siteParam) }}"
+                       {% if handle == pane %}class="sel"{% endif %}>{{ label }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    {% if readOnly %}
+        <div class="readable">
+            <blockquote class="note warning">
+                {{ 'These settings are stored in the project config, which this environment does not allow changing (`allowAdminChanges` is off). Edit them in development and deploy.'|t('cookie-consent-kit') }}
+            </blockquote>
+        </div>
+
+        {# A disabled fieldset also drops its controls from any submission.
+           Craft's own widgets are divs driven by JavaScript, so the attribute
+           leaves them looking live: they need muting on their own. #}
+        {% css %}
+            #main-content fieldset[disabled] .lightswitch,
+            #main-content fieldset[disabled] .elementselect,
+            #main-content fieldset[disabled] .editable,
+            #main-content fieldset[disabled] .btn {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+        {% endcss %}
+
+        <fieldset disabled>
+    {% else %}
+        {# The plugin's own save: each pane posts a handful of settings, and
+           Craft's writes back only what the request carried. #}
+        {{ actionInput('cookie-consent-kit/settings/save') }}
+        {{ redirectInput('cookie-consent-kit/settings/' ~ pane ~ (selectedSite ? '?site=' ~ selectedSite.handle : '')) }}
+    {% endif %}
+
+    {# The edited language and site travel with the form, so the save can merge. #}
+    {% namespace 'settings' %}
+        {{ hiddenInput('editedLanguage', lang) }}
+        {{ hiddenInput('editedSiteId', selectedSite.id) }}
+        {% block pane %}{% endblock %}
+    {% endnamespace %}
+
+    {% if readOnly %}
+        </fieldset>
+    {% endif %}
+{% endblock %}
+
+{# A pane holding per-site wording sets `copyTarget`, which puts its copy
+   control beside the save button: it acts on the whole form. #}
+{% block actionButton %}
+    {% if copyTarget is defined and not readOnly %}
+        {% import 'cookie-consent-kit/settings/_macros' as helper %}
+        {{ helper.copyFromSite(otherSites, copyTarget) }}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}

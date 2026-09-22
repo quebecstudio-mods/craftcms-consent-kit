@@ -1,0 +1,44 @@
+{# A setting present in `config/cookie-consent-kit.php` wins, so its field is locked. #}
+{% macro lockNote(overrides, key) %}
+    {%- if overrides[key] is defined -%}
+        {{ 'Overridden by config/cookie-consent-kit.php'|t('cookie-consent-kit') }}
+    {%- endif -%}
+{% endmacro %}
+
+{#
+    Fills the form with another site's wording. Indexing by site multiplies
+    the typing, and this is what makes that bearable.
+
+    It writes into the fields and stops there: what lands on screen is the
+    preview, and leaving the page without saving abandons it. A dialog
+    summarising what would be overwritten would ask someone to trust a
+    description of the thing rather than the thing.
+
+    It sits with the save button because it acts on the whole form, not on any
+    one field — and shows up only where there is another site to copy from.
+#}
+{% macro copyFromSite(otherSites, target) %}
+    {% if otherSites|length %}
+        {% set menuId = 'qsm-ck-copy-' ~ target %}
+
+        {# A disclosure menu, not a plain `.menu`: Garnish rebuilds the latter
+           as a listbox and drops the attributes these items are found by. #}
+        <button type="button"
+                class="btn menubtn"
+                aria-controls="{{ menuId }}"
+                data-disclosure-trigger>{{ 'Copy from'|t('cookie-consent-kit') }}</button>
+
+        <div id="{{ menuId }}" class="menu menu--disclosure">
+            <ul>
+                {% for site in otherSites %}
+                    <li>
+                        <button type="button"
+                                class="menu-item"
+                                data-qsm-ck-copy="{{ target }}"
+                                data-qsm-ck-copy-source="{{ site.value }}">{{ site.label }}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endmacro %}
