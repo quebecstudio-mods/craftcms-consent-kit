@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * French translation. English is the source language; the keys are the English
+ * strings as they appear in the code.
+ */
+
+return [
+    'General' => 'Général',
+
+    'Handle' => 'Identifiant',
+    'handle' => 'identifiant',
+    'Add a category' => 'Ajouter une catégorie',
+
+    'A category with no declared cookie stays hidden, so adding one costs nothing until it is used. Its handle is permanent: the consent cookie stores it, and renaming it would strand every consent already given.'
+        => 'Une catégorie sans témoin déclaré reste masquée : en ajouter une ne coûte rien tant qu’elle ne sert pas. Son identifiant est définitif — le témoin de consentement le mémorise, et le renommer laisserait sans objet tous les consentements déjà donnés.',
+    'No category' => 'Aucune catégorie',
+    'Label' => 'Libellé',
+    'Description' => 'Description',
+    'Shown under the category in the manage panel.' => 'Affichée sous la catégorie dans le panneau « Gérer ».',
+    '— always on' => '— toujours active',
+    'Wording is stored per site. Only the selected site is edited here; the others are preserved when you save.'
+        => 'Les libellés sont conservés par site. Seul le site sélectionné est modifié ici ; les autres sont préservés à l’enregistrement.',
+    'A handle identifies a cookie across every site, and survives a change of technical name. Leave it empty and one is derived from the name.'
+        => 'L’identifiant désigne un témoin sur tous les sites et survit à un changement de nom technique. Laissé vide, il est dérivé du nom.',
+
+    'Skip the banner on a Global Privacy Control refusal' => 'Masquer le bandeau si le navigateur signale un refus',
+    'Some browsers send a signal meaning “I refuse optional cookies”. That refusal is always honoured: optional categories start off, and nothing is set before consent. This setting only decides whether the banner still asks. Turn it off to keep telling every visitor what the site uses. With the banner skipped, a visitor changes their mind from the reopen tab — so keep that tab on, or provide your own entry point.'
+        => 'Certains navigateurs envoient un signal signifiant « je refuse les témoins facultatifs ». Ce refus est toujours respecté : les catégories facultatives démarrent désactivées et rien n’est déposé avant consentement. Ce réglage décide seulement si le bandeau pose quand même la question. Désactivez-le pour continuer d’informer chaque visiteur de ce que le site utilise. Le bandeau masqué, le visiteur revient sur son refus par l’onglet de réouverture : gardez cet onglet actif, ou fournissez votre propre point d’entrée.',
+    'The banner is skipped for these visitors and the reopen tab is off, so they have no way to accept unless the site provides its own entry point.'
+        => 'Le bandeau est masqué pour ces visiteurs et l’onglet de réouverture est désactivé : ils n’ont aucun moyen d’accepter, sauf si le site fournit son propre point d’entrée.',
+
+    'Inventory table' => 'Tableau de l’inventaire',
+    'The cookie table can be shown in a page of the site — the privacy policy, most of the time. It has no style of its own: it takes on the style of the page around it.'
+        => 'Le tableau des témoins peut être affiché dans une page du site — la politique de confidentialité, le plus souvent. Il n’a pas de style à lui : il prend celui de la page qui l’accueille.',
+    'From a template:' => 'Depuis un gabarit :',
+    'From content, once the field goes through the filter:' => 'Depuis le contenu, une fois le champ passé par le filtre :',
+    'CSS framework' => 'Framework CSS',
+    'The shipped sets match one version of each framework. Custom writes your own.'
+        => 'Les jeux fournis correspondent à une version donnée de chaque framework. « Personnalisé » permet d’écrire les vôtres.',
+    'Custom' => 'Personnalisé',
+    'Wrapper' => 'Conteneur',
+    'Category title' => 'Titre de catégorie',
+    'Category description' => 'Description de catégorie',
+    'Table' => 'Tableau',
+    'Table header' => 'En-tête du tableau',
+    'Table body' => 'Corps du tableau',
+    'Row' => 'Ligne',
+    'Header cell' => 'Cellule d’en-tête',
+    'Cell' => 'Cellule',
+
+    'Category that lifts the facade' => 'Catégorie qui lève la façade',
+    'A visitor who accepted this category gets the video loaded outright, without clicking. Left on “No category”, the facade always applies — which is the safer answer: consent for a category is broader than consent for one video, and Law 25 asks for specific consent. Withdrawing consent restores the facade on the next page load; a player already on screen stays.'
+        => 'Un visiteur ayant accepté cette catégorie voit la vidéo chargée d’emblée, sans cliquer. Laissée à « Aucune catégorie », la façade s’applique toujours — c’est la réponse la plus sûre : le consentement à une catégorie est plus large que le consentement à une vidéo, et la Loi 25 demande un consentement spécifique. Le retrait du consentement rétablit la façade au chargement suivant ; un lecteur déjà affiché, lui, reste.',
+
+    'Measurement' => 'Mesure',
+    'Which category a visitor has to accept before Google Consent Mode and Matomo are granted. A site that measures nothing leaves both on “None”.'
+        => 'La catégorie qu’un visiteur doit accepter pour que Google Consent Mode et Matomo soient autorisés. Un site qui ne mesure rien laisse les deux à « Aucune ».',
+    'Analytics category' => 'Catégorie de statistiques',
+    'Drives Matomo and Google analytics_storage.' => 'Pilote Matomo et analytics_storage de Google.',
+    'Marketing category' => 'Catégorie de marketing',
+    'Drives Google ad_storage, ad_user_data and ad_personalization.'
+        => 'Pilote ad_storage, ad_user_data et ad_personalization de Google.',
+    'Cookie inventory' => 'Inventaire des témoins',
+
+    'Consent cookie' => 'Témoin de consentement',
+    'Privacy policy' => 'Politique de confidentialité',
+    'Appearance' => 'Apparence',
+    'Behaviour' => 'Comportement',
+
+    'Plugin name' => 'Nom du plugin',
+    'Shown in the control panel. Leave it empty to use the plugin name.'
+        => "Affiché dans le panneau d'administration. Laisser vide pour utiliser le nom du plugin.",
+
+    'Cookie name' => 'Nom du témoin',
+    'Name of the cookie that remembers the visitor’s choice. Renaming it invalidates existing consents — bump the policy version at the same time.'
+        => "Nom du témoin qui mémorise le choix du visiteur. Le renommer invalide les consentements déjà donnés — l'accompagner d'un incrément de version.",
+    'Lifetime' => 'Durée de conservation',
+    'In seconds. 15,552,000 is 180 days.' => 'En secondes. 15 552 000 correspond à 180 jours.',
+    'Policy version' => 'Version de la politique',
+    'Bump this when a cookie appears in a non-necessary category, a category is added, or a purpose changes. Visitors will then be asked again.'
+        => "À incrémenter lorsqu'un témoin apparaît dans une catégorie non nécessaire, qu'une catégorie est ajoutée, ou qu'une finalité change. Les visiteurs seront alors resollicités.",
+
+    'Privacy policy page' => 'Page de la politique de confidentialité',
+    'Link to' => 'Pointer vers',
+    'A page on this site' => 'Une page de ce site',
+    'A custom URL' => 'Une URL personnalisée',
+    'This choice is made per site.' => 'Ce choix est fait par site.',
+    'The link follows the slug if the page is renamed.'
+        => 'Le lien suit le slug si la page est renommée.',
+    'For a page outside Craft, or an environment variable.'
+        => "Pour une page hors Craft, ou une variable d'environnement.",
+    'Choose a page' => 'Choisir une page',
+
+    'Privacy policy URL' => 'Lien vers la politique de confidentialité',
+    'Video' => 'Vidéo',
+
+    'Fallback language' => 'Langue de repli',
+    'Used when the current locale has no wording. The list holds the languages the plugin ships with, plus any the site adds in lang/vendor/cookie-consent-kit.'
+        => 'Utilisée lorsque la langue courante n’a aucun texte. La liste réunit les langues fournies par le plugin et celles que le site ajoute dans lang/vendor/cookie-consent-kit.',
+    'Colour scheme' => 'Thème',
+    '“Auto” follows the visitor’s system preference. The dark scheme uses the palette set through --qsm-ck-dark-*.'
+        => '« Auto » suit la préférence système du visiteur. Le thème sombre utilise la palette définie par les variables --qsm-ck-dark-*.',
+    'Auto (recommended)' => 'Auto (recommandé)',
+    'Light' => 'Clair',
+    'Dark' => 'Sombre',
+
+    'Panel backdrop' => 'Arrière-plan du panneau',
+    'Effect applied behind the “Manage” panel. Blur signals the modality without hiding the page.'
+        => 'Effet appliqué derrière le panneau « Gérer ». Le flou signale la modalité sans masquer la page.',
+    'Blur (recommended)' => 'Flou (recommandé)',
+    'Dim' => 'Voile sombre',
+    'None' => 'Aucun',
+
+    'Display mode' => 'Disposition',
+    'Full width along the bottom, or a box: floating in the middle, or in a bottom corner. On a narrow screen every mode is full width.'
+        => 'Pleine largeur en bas de l’écran, ou une boîte : flottante au centre, ou dans un coin inférieur. Sur un écran étroit, toutes les dispositions passent en pleine largeur.',
+    'Full width' => 'Pleine largeur',
+    'Floating box' => 'Boîte flottante',
+    'Bottom left corner' => 'Coin inférieur gauche',
+    'Bottom right corner' => 'Coin inférieur droit',
+
+    'YouTube facade' => 'Façade YouTube',
+    'YouTube videos load only when the visitor clicks, so nothing reaches Google beforehand — the click is the consent, for that video alone. Only YouTube is covered: videos hosted elsewhere are untouched by this setting, and each template is responsible for them. Turning this off embeds YouTube directly, which lets Google set cookies as soon as the page is displayed, without any consent.'
+        => "Les vidéos YouTube ne se chargent qu'au clic du visiteur : rien n'est transmis à Google avant. Le clic vaut consentement, pour cette vidéo seulement. Seul YouTube est couvert : les vidéos hébergées ailleurs ne sont pas touchées par ce réglage, et relèvent de chaque gabarit. Désactiver ce réglage intègre YouTube directement, ce qui laisse Google déposer ses témoins dès l'affichage de la page, sans aucun consentement.",
+    'YouTube videos currently load without consent.' => 'Les vidéos YouTube se chargent actuellement sans consentement.',
+
+    'YouTube thumbnails' => 'Vignettes YouTube',
+    'Show the real thumbnail on the facade. The server fetches it from YouTube once, caches it, and serves it from this domain — the visitor never contacts Google before clicking. Turning this off falls back to a plain gradient.'
+        => 'Affiche la véritable vignette sur la façade. Le serveur la récupère une fois auprès de YouTube, la met en cache et la sert depuis ce domaine : le visiteur ne contacte jamais Google avant son clic. Désactiver ce réglage rétablit un simple dégradé.',
+
+    'Reopen tab' => 'Onglet de réouverture',
+    'Reopen tab position' => 'Position de l’onglet de réouverture',
+    'Bottom edge of the screen, on this side. “Auto” follows the display mode: on the right for a bottom right corner, on the left otherwise.'
+        => 'Bord inférieur de l’écran, de ce côté. « Auto » suit la disposition : à droite pour le coin inférieur droit, à gauche sinon.',
+    'Auto' => 'Auto',
+    'Left' => 'Gauche',
+    'Right' => 'Droite',
+    'Small tab shown once the visitor has decided, so the banner can be reopened. Required for compliance — withdrawal must be as easy as consent. Turn it off only if the site provides its own entry point calling window.qsmConsentKit.open().'
+        => "Petit onglet affiché une fois la décision prise, permettant de rouvrir la bannière. Nécessaire à la conformité : le retrait doit être aussi simple que l'octroi. À désactiver seulement si le site fournit son propre point d'entrée appelant window.qsmConsentKit.open().",
+
+    'Automatic injection' => 'Injection automatique',
+    'Places the banner as the first child of <body>, without touching any template. Turn this off only if the site needs to position it itself. The <head> bootstrap always stays automatic.'
+        => "Place la bannière en premier enfant du <body>, sans toucher aux gabarits. À désactiver seulement si le site doit la positionner lui-même. L'amorçage du <head>, lui, reste toujours automatique.",
+    'Template folder' => 'Dossier de gabarits',
+    'A template placed in this folder of the site overrides the plugin’s own. For example resources/views/_consent/banner.twig.'
+        => 'Un gabarit placé dans ce dossier du site remplace celui du plugin. Par exemple resources/views/_consent/banner.twig.',
+
+    'This inventory is a compliance record: it must reflect what the site actually sets. A category with no declared cookie is not shown in the banner.'
+        => "Cet inventaire est une pièce de conformité : il doit refléter ce que le site dépose réellement. Une catégorie sans témoin déclaré n'apparaît pas dans la bannière.",
+
+    'Category' => 'Catégorie',
+    'Name' => 'Nom',
+    'Set by' => 'Déposé par',
+    'This site' => 'Ce site',
+    'Purpose' => 'Finalité',
+    'Retention' => 'Conservation',
+    'Cookies' => 'Témoins',
+    'Shown' => 'Affichée',
+    'always on' => 'toujours active',
+    'Hidden — no cookie declared' => 'Masquée — aucun témoin déclaré',
+
+    'Set in the config file, which takes precedence.' => 'Défini dans le fichier de config, qui a préséance.',
+    'Site:' => 'Site :',
+    'Copy from:' => 'Copier depuis :',
+    'The inventory is set in the config file and cannot be edited here.' => 'L’inventaire est défini dans le fichier de config et ne peut pas être modifié ici.',
+    'Delete this category' => 'Supprimer cette catégorie',
+    'Removed with its cookies when you save. Visitors who accepted it keep that in their consent cookie until the policy version is bumped, and any tag marked with its handle stops being activated.'
+        => 'Retirée avec ses témoins à l’enregistrement. Les visiteurs qui l’avaient acceptée le gardent dans leur témoin de consentement jusqu’à ce que la version de la politique change, et toute balise marquée de son identifiant cesse d’être activée.',
+];
