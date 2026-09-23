@@ -16,9 +16,6 @@ use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
  */
 class Settings extends PluginSettings
 {
-    /** Name shown in the control panel. Empty falls back to the translated default. */
-    public string $pluginName = '';
-
     /** Cookie that remembers the visitor's choice. */
     public string $cookieName = 'cookie_consent';
 
@@ -177,10 +174,37 @@ class Settings extends PluginSettings
      */
     public array $categories = [];
 
+    /**
+     * Whether decisions are recorded server-side. Off by default: keeping a
+     * register is a decision a site announces in its privacy policy, not
+     * something a `composer update` starts doing.
+     */
+    public bool $registry = false;
+
+    /**
+     * Whether the signed-in user is recorded with their decision. On by
+     * default: it is the only identity the server can assert rather than be
+     * told, and a site with no public accounts never fills the column.
+     */
+    public bool $registryUser = true;
+
+    /**
+     * Whether the address and browser the decision came from are recorded.
+     * They answer where a decision came from; they also make the register
+     * personal data, so this stays off by default.
+     */
+    public bool $registryRequestContext = false;
+
+    /**
+     * How long a record is kept beyond the consent it attests, in months. The
+     * retention itself is `cookieMaxAge` plus this. Zero keeps records until
+     * they are purged by hand.
+     */
+    public int $registryGrace = 12;
+
     public function getRules(): array
     {
         return [
-            'pluginName' => ['string'],
             'cookieName' => ['required', 'string'],
             'defaultLanguage' => ['required', 'string'],
             'templateRoot' => ['string'],

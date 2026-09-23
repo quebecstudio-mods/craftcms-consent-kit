@@ -30,6 +30,7 @@ use QuebecStudioMods\ConsentKit\Core\Defaults;
 use QuebecStudioMods\ConsentKit\Core\Resolver;
 use QuebecStudioMods\ConsentKit\CraftCms\Models\Settings;
 use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
+use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
 
 /**
  * The settings panes, described with Craft 6's Control Panel Form API: the
@@ -73,6 +74,8 @@ final class SettingsForms
 
         $values['categories'] = $this->categoryValues($copyFromResolver ?? $this->resolver);
         $values['addCategory'] = '1';
+
+        $values['registry'] = app(Decisions::class)->isCollecting();
 
         return ['settings' => $values];
     }
@@ -124,7 +127,14 @@ final class SettingsForms
             'behaviour' => t('Behaviour', category: 'cookie-consent-kit'),
             'video' => t('Video', category: 'cookie-consent-kit'),
             'appearance' => t('Appearance', category: 'cookie-consent-kit'),
+            'registry' => t('Register', category: 'cookie-consent-kit'),
         ];
+    }
+
+    /** Panes the Pro edition opens. */
+    public static function proPanes(): array
+    {
+        return ['registry'];
     }
 
     /** Panes whose settings are made per site. */
@@ -149,6 +159,7 @@ final class SettingsForms
             'behaviour' => $this->behaviour(),
             'video' => $this->video(),
             'appearance' => $this->appearance(),
+            'registry' => $this->registry(),
             default => throw new InvalidArgumentException("Unknown pane: $pane"),
         };
     }
@@ -472,12 +483,6 @@ final class SettingsForms
     {
         return Form::make([
             $this->field(
-                'pluginName',
-                t('Plugin name', category: 'cookie-consent-kit'),
-                t('Shown in the control panel. Leave it empty to use the plugin name.', category: 'cookie-consent-kit'),
-                Text::make('pluginName')->placeholder(Plugin::NAME),
-            ),
-            $this->field(
                 'defaultLanguage',
                 t('Fallback language', category: 'cookie-consent-kit'),
                 t('Used when the current locale has no wording. The list holds the languages the plugin ships with, plus any the site adds in lang/vendor/cookie-consent-kit.', category: 'cookie-consent-kit'),
@@ -508,6 +513,57 @@ final class SettingsForms
                 Number::make('version'),
             ),
         ]);
+    }
+
+    private function registry(): Form
+    {
+        $decisions = app(Decisions::class);
+        $collecting = $decisions->isCollecting();
+        $fields = [];
+
+        if (!$decisions->canEnable()) {
+            $fields[] = MarkdownContent::make('registry-edition', implode(' ', [
+                '**' . t('Pro', category: 'cookie-consent-kit') . '**',
+                t('Keeping a server-side register is part of the Pro edition. Standard collects and honours consent; Pro archives the proof.', category: 'cookie-consent-kit'),
+            ]));
+
+            if ($decisions->isSuspended()) {
+                $fields[] = MarkdownContent::make(
+                    'registry-suspended',
+                    t('This install asks for a register in its configuration. Without the Pro edition it stays dormant, and nothing is written. Records already kept remain readable, exportable and purgeable.', category: 'cookie-consent-kit'),
+                );
+            }
+        }
+
+        $fields[] = Field::make(
+            t('Record decisions', category: 'cookie-consent-kit'),
+            Lightswitch::make('registry')->mode($decisions->canEnable() ? $this->modeFor('registry') : ControlMode::ReadOnly),
+        )
+            ->instructions(t('Each decision is written down as the browser makes it: the server clock, the site, the categories answered, and a fingerprint of the wording that was on screen. The cookie’s own timestamp lives on the visitor’s device and proves nothing. Off by default — a register is something a site announces in its privacy policy.', category: 'cookie-consent-kit'))
+            ->warning($this->lockNote('registry'));
+
+        if ($collecting) {
+            $fields[] = $this->lightswitch(
+                'registryUser',
+                t('Record the signed-in user', category: 'cookie-consent-kit'),
+                t('When a decision comes from someone signed in, their account is recorded with it. This is the one identity the server can assert rather than be told. Deleting an account clears the link and leaves the decision.', category: 'cookie-consent-kit'),
+            );
+
+            $fields[] = $this->lightswitch(
+                'registryRequestContext',
+                t('Record where the decision came from', category: 'cookie-consent-kit'),
+                t('The visitor’s address and browser, stored as they are, so a record answers where a decision came from — which a hash cannot. It also makes the register personal data, to be declared and to be answered for. Off by default.', category: 'cookie-consent-kit'),
+            );
+        }
+
+        $fields[] = $this->field(
+            'registryGrace',
+            t('Keep records for', category: 'cookie-consent-kit'),
+            t('Months kept beyond the life of the consent cookie itself, so a proof outlives what it attests. Zero keeps every record until it is purged by hand.', category: 'cookie-consent-kit'),
+            Number::make('registryGrace'),
+        );
+
+        return Form::make($fields);
     }
 
     private function video(): Form

@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use QuebecStudioMods\ConsentKit\Core\Bootstrap;
 use QuebecStudioMods\ConsentKit\Core\CookieTableMarkers;
 use QuebecStudioMods\ConsentKit\Core\Paths;
+use QuebecStudioMods\ConsentKit\Core\RecordScript;
 use QuebecStudioMods\ConsentKit\Core\Resolver;
 use QuebecStudioMods\ConsentKit\Core\SiteContext;
 use QuebecStudioMods\ConsentKit\Core\Templates;
@@ -47,6 +48,12 @@ final class Consent
         return $this->resolved ??= $this->resolver()->bannerConfig($this->policyUrl());
     }
 
+    /** Configuration for one site, as that site would serve it. */
+    public function resolvedConfigFor(int $siteId): array
+    {
+        return $this->resolver($siteId)->bannerConfig($this->policyUrl($siteId));
+    }
+
     /** Privacy policy link, or null so the banner omits it. */
     public function policyUrl(?int $siteId = null): ?string
     {
@@ -74,6 +81,21 @@ final class Consent
             Position::Head,
             [],
             'qsm-consent-kit-bootstrap',
+        );
+    }
+
+    /** The reporting script, only where there is a register to report to. */
+    public function registerRecordScript(): void
+    {
+        if (!app(Decisions::class)->isCollecting()) {
+            return;
+        }
+
+        app(HtmlStack::class)->script(
+            RecordScript::build(Url::actionUrl('cookie-consent-kit/record'), ['site' => Sites::getCurrentSite()->id]),
+            Position::BodyEnd,
+            [],
+            'qsm-consent-kit-registry',
         );
     }
 

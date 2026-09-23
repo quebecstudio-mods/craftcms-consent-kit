@@ -68,10 +68,6 @@ return [
     'Appearance' => 'Apparence',
     'Behaviour' => 'Comportement',
 
-    'Plugin name' => 'Nom du plugin',
-    'Shown in the control panel. Leave it empty to use the plugin name.'
-        => "Affiché dans le panneau d'administration. Laisser vide pour utiliser le nom du plugin.",
-
     'Cookie name' => 'Nom du témoin',
     'Name of the cookie that remembers the visitor’s choice. Renaming it invalidates existing consents — bump the policy version at the same time.'
         => "Nom du témoin qui mémorise le choix du visiteur. Le renommer invalide les consentements déjà donnés — l'accompagner d'un incrément de version.",
@@ -167,4 +163,99 @@ return [
     'Delete this category' => 'Supprimer cette catégorie',
     'Removed with its cookies when you save. Visitors who accepted it keep that in their consent cookie until the policy version is bumped, and any tag marked with its handle stops being activated.'
         => 'Retirée avec ses témoins à l’enregistrement. Les visiteurs qui l’avaient acceptée le gardent dans leur témoin de consentement jusqu’à ce que la version de la politique change, et toute balise marquée de son identifiant cesse d’être activée.',
+
+    'Consent' => 'Consentements',
+    'Consent register' => 'Registre des consentements',
+    'Register' => 'Registre',
+    'Keeping a server-side register is part of the Pro edition. Standard collects and honours consent; Pro archives the proof.'
+        => 'Tenir un registre côté serveur relève de l’édition Pro. Standard recueille le consentement et le respecte ; Pro en archive la preuve.',
+    'Learn more' => 'En savoir plus',
+    'Record decisions' => 'Consigner les décisions',
+    'Each decision is written down as the browser makes it: the server clock, the site, the categories answered, and a fingerprint of the wording that was on screen. The cookie’s own timestamp lives on the visitor’s device and proves nothing. Off by default — a register is something a site announces in its privacy policy.'
+        => 'Chaque décision est consignée au moment où le navigateur la prend : horloge du serveur, site, catégories répondues, et empreinte du texte qui était à l’écran. L’horodatage du témoin, lui, vit sur l’appareil du visiteur et ne prouve rien. Désactivé par défaut — un registre s’annonce dans la politique de confidentialité.',
+    'Keep records for' => 'Conserver les entrées',
+    'Months kept beyond the life of the consent cookie itself, so a proof outlives what it attests. Zero keeps every record until it is purged by hand.'
+        => 'Mois de conservation au-delà de la durée du témoin de consentement, pour qu’une preuve survive à ce qu’elle atteste. Zéro conserve tout jusqu’à une purge manuelle.',
+    'Record the signed-in user' => 'Consigner l’utilisateur connecté',
+    'When a decision comes from someone signed in, their account is recorded with it. This is the one identity the server can assert rather than be told. Deleting an account clears the link and leaves the decision.'
+        => 'Quand la décision vient d’une personne connectée, son compte est consigné avec elle. C’est la seule identité que le serveur constate au lieu de se la faire déclarer. Supprimer un compte efface le lien et laisse la décision.',
+    'Record where the decision came from' => 'Consigner la provenance de la décision',
+    'The visitor’s address and browser, stored as they are, so a record answers where a decision came from — which a hash cannot. It also makes the register personal data, to be declared and to be answered for. Off by default.'
+        => 'L’adresse et le navigateur du visiteur, conservés tels quels, pour qu’une entrée réponde d’où venait la décision — ce qu’une empreinte ne permet pas. Cela fait aussi du registre une donnée personnelle, à déclarer et à assumer. Désactivé par défaut.',
+    'Collection is off. What is listed here was recorded while it was on.'
+        => 'La collecte est arrêtée. Ce qui est listé ici a été consigné pendant qu’elle était active.',
+    'This install asks for a register in its configuration. Without the Pro edition it stays dormant, and nothing is written. Records already kept remain readable, exportable and purgeable.'
+        => 'Cette installation demande un registre dans sa configuration. Sans l’édition Pro, il reste en sommeil et rien n’est consigné. Les entrées déjà conservées restent consultables, exportables et purgeables.',
+    'All sites' => 'Tous les sites',
+    'Language' => 'Langue',
+    'Clear filters' => 'Retirer les filtres',
+    'From' => 'Du',
+    'To' => 'Au',
+    'Export' => 'Exporter',
+    'Export…' => 'Exporter…',
+    'Format' => 'Format',
+    'JSON' => 'JSON',
+    'with the wording of every screen' => 'avec le texte de chaque écran',
+    'Limit' => 'Limite',
+    'No limit' => 'Aucune limite',
+    'Back to the register' => 'Retour au registre',
+    'Includes the wording of every screen' => 'Comprend le texte de chaque écran',
+    'Granted' => 'Accordé',
+    'Any' => 'Peu importe',
+    'Everything' => 'Tout',
+    'Required only' => 'Requis seulement',
+    'Some categories' => 'Certaines catégories',
+    'Accepted everything' => 'Tout accepté',
+    'Refused everything' => 'Tout refusé',
+    'Chose category by category' => 'Choisi catégorie par catégorie',
+    'from the banner' => 'depuis la bannière',
+    'from the preferences panel' => 'depuis le panneau de préférences',
+    'from the browser’s Global Privacy Control signal'
+        => 'depuis le signal Global Privacy Control du navigateur',
+    'Decided' => 'Décidé le',
+    'Answer' => 'Réponse',
+    'Accepted' => 'Acceptée',
+    'Refused' => 'Refusée',
+    'Screen' => 'Écran',
+    'No decision recorded yet.' => 'Aucune décision consignée pour l’instant.',
+    'Page {page} of {pages}' => 'Page {page} sur {pages}',
+    '{total} decisions' => '{total} décisions',
+    'Decision {id}' => 'Décision {id}',
+    'What was recorded' => 'Ce qui a été consigné',
+    'Consent version' => 'Version du consentement',
+    'Policy' => 'Politique',
+    'Address' => 'Adresse',
+    'Browser' => 'Navigateur',
+    'Signed in as' => 'Connecté comme',
+    'The account has since been deleted.' => 'Le compte a été supprimé depuis.',
+    'The site has since been deleted.' => 'Le site a été supprimé depuis.',
+    'Categories answered' => 'Catégories répondues',
+    'What was on screen' => 'Ce qui était à l’écran',
+    'Fingerprint of this screen. Decisions sharing it were shown exactly the same wording, and it lets anyone recompute the text below to check that nothing moved.'
+        => 'Empreinte de cet écran. Les décisions qui la partagent ont vu exactement la même formulation, et elle permet de recalculer le texte ci-dessous pour vérifier que rien n’a bougé.',
+    'Categories shown' => 'Catégories affichées',
+    'Buttons' => 'Boutons',
+    'Every string that was displayed' => 'Toutes les chaînes affichées',
+    'Always on' => 'Toujours active',
+    'Optional, unchecked by default' => 'Optionnelle, décochée par défaut',
+    '{count} cookies listed' => '{count} témoins listés',
+    'The presentation was not stored.' => 'La présentation n’a pas été conservée.',
+    'View the consent register' => 'Consulter le registre des consentements',
+    'Export the consent register' => 'Exporter le registre des consentements',
+    'Purge the consent register' => 'Purger le registre des consentements',
+    '{count} decisions recorded, the oldest on {date}.'
+        => '{count} décisions consignées, la plus ancienne le {date}.',
+    'Delete records older than' => 'Supprimer les entrées de plus de',
+    'Retention removes outlived records on its own. This is for a deletion that cannot wait.'
+        => 'La rétention supprime d’elle-même les entrées périmées. Ceci sert à une suppression qui ne peut pas attendre.',
+    '{n} months' => '{n} mois',
+    'All records' => 'Toutes les entrées',
+    'Purge' => 'Purger',
+    'Deleting records cannot be undone. Continue?'
+        => 'La suppression est définitive. Continuer ?',
+    'Purging frees nobody: consent lives in the visitor’s cookie and keeps applying. What goes is the proof of it, and a site that still acts on a consent it can no longer show has the worst of both.'
+        => 'Purger ne libère personne : le consentement vit dans le témoin du visiteur et continue de s’appliquer. Ce qui disparaît, c’est la preuve — et un site qui agit encore sur un consentement qu’il ne peut plus montrer cumule les deux inconvénients.',
+    '{count} records deleted.' => '{count} entrées supprimées.',
+    'You do not have permission to purge the register.'
+        => 'Vous n’avez pas la permission de purger le registre.',
 ];

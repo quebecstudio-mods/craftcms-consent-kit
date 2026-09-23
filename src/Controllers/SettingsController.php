@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Consent;
+use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\SettingsStore;
 use QuebecStudioMods\ConsentKit\CraftCms\Settings\SettingsForms;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,8 +92,14 @@ final class SettingsController
         abort_unless(isset(SettingsForms::panes()[$pane]), 404);
 
         $posted = $request->input('settings', []);
+        $posted = is_array($posted) ? $posted : [];
+
+        if (!empty($posted['registry']) && !app(Decisions::class)->canEnable()) {
+            $posted['registry'] = false;
+        }
+
         $site = in_array($pane, SettingsForms::perSitePanes(), true) ? $this->editedSite($request) : null;
-        $model = $this->store->save(is_array($posted) ? $posted : [], $site);
+        $model = $this->store->save($posted, $site);
 
         if ($model->errors()->isNotEmpty()) {
             throw ValidationException::withMessages(collect($model->errors()->getMessages())
@@ -103,12 +110,21 @@ final class SettingsController
         return $this->asSuccess(t('Plugin settings saved.'));
     }
 
-    /** @return list<NavItem> */
+    /**
+     * `NavItem` carries a numeric badge only, so a Pro pane says so in its
+     * label rather than through the control panel's legacy styling.
+     *
+     * @return list<NavItem>
+     */
     private function subnav(string $current, Site $site): array
     {
+        $pro = SettingsForms::proPanes();
+
         return collect(SettingsForms::panes())
             ->map(fn (string $label, string $pane) => new NavItem()
-                ->label($label)
+                ->label(in_array($pane, $pro, true)
+                    ? $label.' · '.t('Pro', category: 'cookie-consent-kit')
+                    : $label)
                 ->url($this->paneUrl($pane, $site))
                 ->selected($pane === $current))
             ->values()

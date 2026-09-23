@@ -50,8 +50,18 @@ for the first steps and upgrading from 5.x.
 | [JavaScript API](docs/javascript-api.md) | `window.qsmConsentKit`, conditional tags, consent cookie |
 | [Integrations](docs/integrations.md) | GA4, Matomo, Global Privacy Control, recipes, YouTube facade |
 | [Privacy policy](docs/privacy-policy.md) | Policy link, cookie table, markers |
+| [Register](docs/register.md) | Recording decisions, the screen they were made on, exports, retention |
 | [Testing](docs/testing.md) | Checklist, constraints |
 | [Troubleshooting](docs/troubleshooting.md) | Banner missing, assets, saving |
+
+## Also for Laravel
+
+The same banner, the same core package, without a control panel:
+[`quebecstudio-mods/laravel-consent-kit`](https://github.com/quebecstudio-mods/laravel-consent-kit)
+configures everything in a published config file, and renders through a Blade
+component. Reach for it when a project runs alongside Craft CMS — a booking app,
+a members' area, a landing site — and has to show the same banner, honour the
+same decision and read the same cookie.
 
 ## Not covered
 
@@ -59,7 +69,8 @@ for the first steps and upgrading from 5.x.
   communication outside Quebec — GA4 is one.
 - Designating and publishing a privacy officer (article 3.1).
 - The privacy policy itself.
-- An enforceable consent record. The cookie's `ts` is a client-side trace.
+- A demonstrable consent record, in the free edition. The cookie's `ts` is a
+  client-side trace; the Pro edition keeps a [register](docs/register.md).
 
 ## Licence
 

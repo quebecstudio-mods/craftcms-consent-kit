@@ -1,5 +1,46 @@
 # Changelog
 
+## 6.0.3 - 2026-09-23
+
+### Added
+
+- **A consent register, in the Pro edition.** Each decision is recorded as the
+  browser makes it, with the server's clock, the site, the categories answered
+  and a fingerprint of the wording that was on screen. The server replays its
+  own configuration to compute that fingerprint, so a browser cannot claim to
+  have been shown something else, and the page carries no trace of it — the
+  HTML stays identical for every visitor and cacheable.
+- The register is read from its own control panel section, gated by three
+  permissions: viewing, exporting and purging. A decision's screen is shown as
+  it was worded then, not as the site words it today.
+- Exports in CSV, Excel and JSON. The JSON carries the wording of every screen
+  and describes how the fingerprint is computed, so a third party can recompute
+  it without the plugin.
+- Retention runs with Craft CMS's garbage collection — the life of the consent
+  cookie plus a configurable grace — and a utility purges by hand.
+- The README points to `quebecstudio-mods/laravel-consent-kit`, the same banner
+  for a Laravel application running alongside Craft CMS.
+
+### Known
+
+- The register's screens follow the control panel's own markup, but Craft CMS 6
+  is mid-rewrite: the classes they rely on are being replaced. They read
+  correctly and are plainly styled until that settles.
+
+### Changed
+
+- The `pluginName` setting is gone. The control panel never read it: the
+  plugin's name comes from its `composer.json`.
+- A new icon, in the series' shape: a rounded square in Québec Studio's
+  blue, carrying the plugin's object.
+
+### Fixed
+
+- **A published asset is no longer served stale.** Its URL carried a hash of the
+  plugin version, while the stylesheet and the script come from the core
+  package: a fix released there left the URL untouched, and a browser kept the
+  old copy. The hash is taken from the file itself.
+
 ## 6.0.2 - 2026-09-23
 
 ### Changed

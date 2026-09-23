@@ -23,5 +23,7 @@ final class RegisterConsentAssets
         $consent->registerBootstrap();
 
         $consent->registerAssets();
+
+        $consent->registerRecordScript();
     }
 }
