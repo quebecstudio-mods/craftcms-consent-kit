@@ -55,6 +55,11 @@ class SettingsController extends Controller
         return $this->page('cookies');
     }
 
+    public function actionRegistry(): Response
+    {
+        return $this->page('registry');
+    }
+
     /**
      * Saves the posted pane, merged over what is already stored.
      *
@@ -94,6 +99,10 @@ class SettingsController extends Controller
             $site ? new SiteContext($site->id, $site->handle, $site->language) : null,
             isset($posted['categories']) ? $plugin->seededCategories([]) : []
         );
+
+        if (!empty($merged['registry']) && !$plugin->decisions->canEnable()) {
+            $merged['registry'] = false;
+        }
 
         if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $merged)) {
             return $this->asModelFailure(
@@ -153,7 +162,10 @@ class SettingsController extends Controller
 
             'readOnly' => !Craft::$app->getConfig()->getGeneral()->allowAdminChanges,
             'pane' => $pane,
-            'pluginName' => $plugin->displayName(),
+            'isPro' => $plugin->is(Plugin::EDITION_PRO),
+            'canEnable' => $plugin->decisions->canEnable(),
+            'collecting' => $plugin->decisions->isCollecting(),
+            'suspended' => $plugin->decisions->isSuspended(),
 
             'selectableSites' => $sites,
             'selectedSite' => $site,

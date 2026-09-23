@@ -41,6 +41,12 @@ class Consent extends Component
         return $this->resolved ??= $this->resolver()->bannerConfig($this->policyUrl());
     }
 
+    /** Configuration for one site, as that site would serve it. */
+    public function resolvedConfigFor(int $siteId): array
+    {
+        return $this->resolver($siteId)->bannerConfig($this->policyUrl($siteId));
+    }
+
     /** Privacy policy link, or null so the banner omits it. */
     public function policyUrl(?int $siteId = null): ?string
     {

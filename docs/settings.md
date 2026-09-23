@@ -7,7 +7,6 @@ is covered by [Configuration](configuration.md).
 
 | Setting | Type | Default | What it does |
 |---|---|---|---|
-| `pluginName` | string | `''` | Name shown in the control panel. Empty uses the plugin name. |
 | `cookieName` | string | `cookie_consent` | Cookie that stores the decision. Accepts `$ENV_VAR`. |
 | `cookieMaxAge` | int | `15552000` | Lifetime of that cookie, in seconds (180 days). |
 | `version` | int | `1` | A stored decision with another version is treated as absent. |
@@ -31,6 +30,10 @@ is covered by [Configuration](configuration.md).
 | `inventoryFramework` | string | `''` | Class set of the cookie table: `''`, `bootstrap`, `bulma`, `tailwind` or `custom`. |
 | `inventoryClasses` | map | `[]` | Classes per table element, used with `custom`. |
 | `categories` | map | shipped categories | Categories and their cookies, in display order. |
+| `registry` | bool | `false` | **Pro.** Records decisions server-side. See [Register](register.md). |
+| `registryUser` | bool | `true` | **Pro.** Records the signed-in user with their decision, when there is one. |
+| `registryRequestContext` | bool | `false` | **Pro.** Records the visitor's address and browser. Makes the register personal data. |
+| `registryGrace` | int | `12` | **Pro.** Months a record is kept beyond the life of the consent cookie. Zero keeps everything. |
 
 ## Per-site settings
 

@@ -1,0 +1,40 @@
+{# Stored values are machine-readable; these read them out. #}
+
+{% macro action(value) %}
+    {%- if value == 'accept-all' -%}
+        {{ 'Accepted everything'|t('cookie-consent-kit') }}
+    {%- elseif value == 'refuse-all' -%}
+        {{ 'Refused everything'|t('cookie-consent-kit') }}
+    {%- elseif value == 'save' -%}
+        {{ 'Chose category by category'|t('cookie-consent-kit') }}
+    {%- else -%}
+        {{ value }}
+    {%- endif -%}
+{% endmacro %}
+
+{% macro outcome(value) %}
+    <span class="status-label">
+        <span class="status {{ value == 'all' ? 'green' : (value == 'none' ? 'disabled' : 'amber') }}"></span>
+        <span class="status-label-text">
+            {%- if value == 'all' -%}
+                {{ 'Everything'|t('cookie-consent-kit') }}
+            {%- elseif value == 'none' -%}
+                {{ 'Required only'|t('cookie-consent-kit') }}
+            {%- else -%}
+                {{ 'Some categories'|t('cookie-consent-kit') }}
+            {%- endif -%}
+        </span>
+    </span>
+{% endmacro %}
+
+{% macro origin(value) %}
+    {%- if value == 'banner' -%}
+        {{ 'from the banner'|t('cookie-consent-kit') }}
+    {%- elseif value == 'dialog' -%}
+        {{ 'from the preferences panel'|t('cookie-consent-kit') }}
+    {%- elseif value == 'gpc' -%}
+        {{ 'from the browser’s Global Privacy Control signal'|t('cookie-consent-kit') }}
+    {%- else -%}
+        {{ value }}
+    {%- endif -%}
+{% endmacro %}

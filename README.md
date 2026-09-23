@@ -50,6 +50,7 @@ for the first steps.
 | [JavaScript API](docs/javascript-api.md) | `window.qsmConsentKit`, conditional tags, consent cookie |
 | [Integrations](docs/integrations.md) | GA4, Matomo, Global Privacy Control, recipes, YouTube facade |
 | [Privacy policy](docs/privacy-policy.md) | Policy link, cookie table, markers |
+| [Register](docs/register.md) | Recording decisions, the screen they were made on, exports, retention |
 | [Testing](docs/testing.md) | Checklist, constraints |
 | [Troubleshooting](docs/troubleshooting.md) | Banner missing, assets, saving, head scripts |
 
@@ -59,7 +60,8 @@ for the first steps.
   communication outside Quebec — GA4 is one.
 - Designating and publishing a privacy officer (article 3.1).
 - The privacy policy itself.
-- An enforceable consent record. The cookie's `ts` is a client-side trace.
+- A demonstrable consent record, in the free edition. The cookie's `ts` is a
+  client-side trace; the Pro edition keeps a [register](docs/register.md).
 
 ## Licence
 

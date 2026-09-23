@@ -1,0 +1,41 @@
+{% import '_includes/forms' as forms %}
+
+{% if total %}
+    <p>
+        {{ '{count} decisions recorded, the oldest on {date}.'|t('cookie-consent-kit', {
+            count: total,
+            date: oldest|date('short'),
+        }) }}
+    </p>
+{% else %}
+    <p class="light">{{ 'No decision recorded yet.'|t('cookie-consent-kit') }}</p>
+{% endif %}
+
+{% if total and canPurge %}
+    <p class="warning">
+        {{ 'Purging frees nobody: consent lives in the visitor’s cookie and keeps applying. What goes is the proof of it, and a site that still acts on a consent it can no longer show has the worst of both.'|t('cookie-consent-kit') }}
+    </p>
+
+    <form method="post" accept-charset="UTF-8" data-confirm="{{ 'Deleting records cannot be undone. Continue?'|t('cookie-consent-kit') }}">
+        {{ csrfInput() }}
+        {{ actionInput('cookie-consent-kit/registry/purge') }}
+
+        {{ forms.selectField({
+            label: 'Delete records older than'|t('cookie-consent-kit'),
+            instructions: 'Retention removes outlived records on its own. This is for a deletion that cannot wait.'|t('cookie-consent-kit'),
+            name: 'months',
+            options: [
+                { label: '{n} months'|t('cookie-consent-kit', { n: 36 }), value: 36 },
+                { label: '{n} months'|t('cookie-consent-kit', { n: 24 }), value: 24 },
+                { label: '{n} months'|t('cookie-consent-kit', { n: 12 }), value: 12 },
+                { label: '{n} months'|t('cookie-consent-kit', { n: 6 }), value: 6 },
+                { label: 'All records'|t('cookie-consent-kit'), value: 0 },
+            ],
+            value: 36,
+        }) }}
+
+        <button type="submit" class="btn submit">{{ 'Purge'|t('cookie-consent-kit') }}</button>
+    </form>
+{% elseif total %}
+    <p class="light">{{ 'You do not have permission to purge the register.'|t('cookie-consent-kit') }}</p>
+{% endif %}

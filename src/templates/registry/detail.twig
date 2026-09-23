@@ -1,0 +1,153 @@
+{#
+    One decision, and the screen it was made on. The wording shown here is the
+    stored presentation, not the site's current settings.
+#}
+{% extends '_layouts/cp' %}
+
+{% import 'cookie-consent-kit/registry/_macros' as reads %}
+
+{% set title = 'Decision {id}'|t('cookie-consent-kit', { id: decision.id }) %}
+
+{% set crumbs = [
+    { label: 'Consent register'|t('cookie-consent-kit'), url: url('cookie-consent-kit/registry') },
+] %}
+
+{% block actionButton %}
+    <a class="btn" data-icon="arrow-left" href="{{ url('cookie-consent-kit/registry') }}">
+        {{ 'Back to the register'|t('cookie-consent-kit') }}
+    </a>
+{% endblock %}
+
+{# Labels as they were displayed, not as the site words them today. #}
+{% set shownLabels = {} %}
+{% for category in presentation.categories ?? [] %}
+    {% set shownLabels = shownLabels|merge({ (category.handle): category.label }) %}
+{% endfor %}
+
+{% css %}
+    .qsm-facts th { width: 18rem; }
+{% endcss %}
+
+{% block content %}
+    <h2>{{ 'What was recorded'|t('cookie-consent-kit') }}</h2>
+
+    <table class="data fullwidth qsm-facts">
+        <tbody>
+            <tr><th>{{ 'Decided'|t('cookie-consent-kit') }}</th><td>{{ decision.decidedAt }}</td></tr>
+            {% if not multisite %}
+                <tr><th>{{ 'Language'|t('cookie-consent-kit') }}</th><td>{{ decision.language }}</td></tr>
+            {% else %}
+            <tr>
+                <th>{{ 'Site'|t('app') }}</th>
+                <td>
+                    {% if site %}
+                        {% if currentUser.admin %}
+                            <a href="{{ url('settings/sites/' ~ site.id) }}">{{ site.name|t('site') }}</a>
+                        {% else %}
+                            {{ site.name|t('site') }}
+                        {% endif %}
+                    {% else %}
+                        <span class="light">{{ 'The site has since been deleted.'|t('cookie-consent-kit') }}</span>
+                    {% endif %}
+                    <span class="token">{{ decision.siteHandle }}</span>
+                    <span class="light">{{ decision.language }}</span>
+                </td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>{{ 'Answer'|t('cookie-consent-kit') }}</th>
+                <td>{{ reads.action(decision.action) }} <span class="light">{{ reads.origin(decision.origin) }}</span></td>
+            </tr>
+            <tr><th>{{ 'Consent version'|t('cookie-consent-kit') }}</th><td>{{ decision.consentVersion }}</td></tr>
+            {% if decision.policyUrl %}
+                <tr>
+                    <th>{{ 'Policy'|t('cookie-consent-kit') }}</th>
+                    <td>
+                        {% if policyEntry %}
+                            {{ elementChip(policyEntry, { hyperlink: true }) }}
+                        {% else %}
+                            <a href="{{ decision.policyUrl }}" target="_blank" rel="noopener">{{ decision.policyUrl }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if user %}
+                {# `hyperlink` links only when Craft finds the element editable for this user. #}
+                <tr><th>{{ 'Signed in as'|t('cookie-consent-kit') }}</th><td>{{ elementChip(user, { hyperlink: true }) }}</td></tr>
+            {% elseif decision.userId %}
+                <tr><th>{{ 'Signed in as'|t('cookie-consent-kit') }}</th><td class="light">{{ 'The account has since been deleted.'|t('cookie-consent-kit') }}</td></tr>
+            {% endif %}
+            {% if decision.ip %}
+                <tr><th>{{ 'Address'|t('cookie-consent-kit') }}</th><td><code>{{ decision.ip }}</code></td></tr>
+            {% endif %}
+            {% if decision.userAgent %}
+                <tr><th>{{ 'Browser'|t('cookie-consent-kit') }}</th><td class="light">{{ decision.userAgent }}</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <h2>{{ 'Categories answered'|t('cookie-consent-kit') }}</h2>
+
+    <table class="data fullwidth qsm-facts">
+        <tbody>
+            {% for handle, granted in answer %}
+                <tr>
+                    <th>{{ shownLabels[handle] ?? handle }} <span class="token">{{ handle }}</span></th>
+                    <td>
+                        <span class="status-label">
+                            <span class="status {{ granted ? 'green' : 'disabled' }}"></span>
+                            <span class="status-label-text">{{ granted ? 'Accepted'|t('cookie-consent-kit') : 'Refused'|t('cookie-consent-kit') }}</span>
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>{{ 'What was on screen'|t('cookie-consent-kit') }}</h2>
+
+    <p class="light">
+        {{ 'Fingerprint of this screen. Decisions sharing it were shown exactly the same wording, and it lets anyone recompute the text below to check that nothing moved.'|t('cookie-consent-kit') }}
+        <br><code>{{ decision.hash }}</code>
+    </p>
+
+    {% if presentation.texts is defined %}
+        {% set texts = presentation.texts %}
+
+        <div class="pane">
+            <p><strong>{{ texts.title ?? '' }}</strong></p>
+            <p>{{ texts.body ?? '' }}</p>
+            <p class="light">
+                {{ 'Buttons'|t('cookie-consent-kit') }}:
+                “{{ texts.accept ?? '' }}” · “{{ texts.refuse ?? '' }}” · “{{ texts.manage ?? '' }}”
+                {%- if decision.policyUrl %} — “{{ texts.policyLabel ?? '' }}” → {{ decision.policyUrl }}{% endif %}
+            </p>
+        </div>
+
+        <h3>{{ 'Categories shown'|t('cookie-consent-kit') }}</h3>
+
+        {% for category in presentation.categories %}
+            <div class="pane">
+                <h4>{{ category.label }} <span class="token">{{ category.handle }}</span></h4>
+                {% if category.description %}<p>{{ category.description }}</p>{% endif %}
+                <p class="light">
+                    {{ category.required ? 'Always on'|t('cookie-consent-kit') : 'Optional, unchecked by default'|t('cookie-consent-kit') }}
+                    — {{ '{count} cookies listed'|t('cookie-consent-kit', { count: category.cookies|length }) }}
+                </p>
+            </div>
+        {% endfor %}
+
+        <details style="margin-top: 1.5rem;">
+            <summary>{{ 'Every string that was displayed'|t('cookie-consent-kit') }}</summary>
+            <table class="data fullwidth qsm-facts" style="margin-top: 0.75rem;">
+                <tbody>
+                    {% for key, text in texts %}
+                        <tr><th>{{ key }}</th><td>{{ text }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </details>
+    {% else %}
+        <p class="light">{{ 'The presentation was not stored.'|t('cookie-consent-kit') }}</p>
+    {% endif %}
+{% endblock %}

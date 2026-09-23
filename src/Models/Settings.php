@@ -13,9 +13,6 @@ use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
  */
 class Settings extends Model
 {
-    /** Name shown in the control panel. Empty falls back to the translated default. */
-    public string $pluginName = '';
-
     /** Cookie that remembers the visitor's choice. */
     public string $cookieName = 'cookie_consent';
 
@@ -144,6 +141,34 @@ class Settings extends Model
     public string $marketingCategory = 'marketing';
 
     /**
+     * Whether decisions are recorded server-side. Off by default: keeping a
+     * register is a decision a site announces in its privacy policy, not
+     * something a `composer update` starts doing.
+     */
+    public bool $registry = false;
+
+    /**
+     * How long a record is kept beyond the consent it attests, in months. The
+     * retention itself is `cookieMaxAge` plus this. Zero keeps records until
+     * they are purged by hand.
+     */
+    public int $registryGrace = 12;
+
+    /**
+     * Whether the signed-in user is recorded with their decision. On by
+     * default: it is the only identity the server can assert rather than be
+     * told, and a site with no public accounts never fills the column.
+     */
+    public bool $registryUser = true;
+
+    /**
+     * Whether the address and browser the decision came from are recorded.
+     * They answer where a decision came from, which a hash cannot; they also
+     * make the register personal data, so this stays off by default.
+     */
+    public bool $registryRequestContext = false;
+
+    /**
      * Categories in display order, each carrying its own cookies. `required`
      * means always on; every other category is forced unchecked by the
      * service. A category with no declared cookie is not shown.
@@ -177,7 +202,7 @@ class Settings extends Model
     public function rules(): array
     {
         return [
-            [['pluginName', 'cookieName', 'defaultLanguage', 'templateRoot', 'inventoryFramework'], 'string'],
+            [['cookieName', 'defaultLanguage', 'templateRoot', 'inventoryFramework'], 'string'],
             [['analyticsCategory', 'marketingCategory', 'videoConsentCategory'], 'string'],
             [['cookieName', 'defaultLanguage'], 'required'],
             [['cookieMaxAge', 'version'], 'integer', 'min' => 1],
@@ -186,6 +211,8 @@ class Settings extends Model
             ['displayMode', 'in', 'range' => Defaults::DISPLAY_MODES],
             ['reopenPosition', 'in', 'range' => Defaults::REOPEN_POSITIONS],
             [['autoInject', 'reopenButton', 'videoFacade', 'videoThumbnails', 'gpcHidesBanner'], 'boolean'],
+            [['registry', 'registryUser', 'registryRequestContext'], 'boolean'],
+            ['registryGrace', 'integer', 'min' => 0],
             [['categories', 'policyEntry', 'policyUrl', 'policySource', 'inventoryClasses'], 'safe'],
         ];
     }

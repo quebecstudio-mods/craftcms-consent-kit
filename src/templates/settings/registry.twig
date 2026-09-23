@@ -1,0 +1,76 @@
+{% extends 'cookie-consent-kit/settings/_layout' %}
+
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/settings/_macros' as helper %}
+
+{% set title = 'Register'|t('cookie-consent-kit') %}
+
+{% block pane %}
+
+    {% if not isPro %}
+        <div class="pane" style="margin-bottom: 1.5rem;">
+            <p>
+                <span class="qsm-edition">{{ 'Pro'|t('cookie-consent-kit') }}</span>
+                {{ 'Keeping a server-side register is part of the Pro edition. Standard collects and honours consent; Pro archives the proof.'|t('cookie-consent-kit') }}
+                <a href="https://plugins.craftcms.com/cookie-consent-kit" rel="noopener" target="_blank">{{ 'Learn more'|t('cookie-consent-kit') }}</a>
+            </p>
+
+            {% if suspended %}
+                <p class="warning">
+                    {{ 'This install asks for a register in its configuration. Without the Pro edition it stays dormant, and nothing is written. Records already kept remain readable, exportable and purgeable.'|t('cookie-consent-kit') }}
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {{ forms.lightswitchField({
+        label: 'Record decisions'|t('cookie-consent-kit'),
+        instructions: 'Each decision is written down as the browser makes it: the server clock, the site, the categories answered, and a fingerprint of the wording that was on screen. The cookie’s own timestamp lives on the visitor’s device and proves nothing. Off by default — a register is something a site announces in its privacy policy.'|t('cookie-consent-kit'),
+        id: 'registry',
+        name: 'registry',
+        on: collecting,
+        disabled: overrides.registry is defined or not canEnable,
+        toggle: 'registry-recording',
+        warning: helper.lockNote(overrides, 'registry'),
+    }) }}
+
+    <div id="registry-recording" class="{{ collecting ? '' : 'hidden' }}">
+
+        {{ forms.lightswitchField({
+            label: 'Record the signed-in user'|t('cookie-consent-kit'),
+            instructions: 'When a decision comes from someone signed in, their account is recorded with it. This is the one identity the server can assert rather than be told. Deleting an account clears the link and leaves the decision.'|t('cookie-consent-kit'),
+            id: 'registryUser',
+            name: 'registryUser',
+            on: settings.registryUser,
+            disabled: overrides.registryUser is defined,
+            warning: helper.lockNote(overrides, 'registryUser'),
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Record where the decision came from'|t('cookie-consent-kit'),
+            instructions: 'The visitor’s address and browser, stored as they are, so a record answers where a decision came from — which a hash cannot. It also makes the register personal data, to be declared and to be answered for. Off by default.'|t('cookie-consent-kit'),
+            id: 'registryRequestContext',
+            name: 'registryRequestContext',
+            on: settings.registryRequestContext,
+            disabled: overrides.registryRequestContext is defined,
+            warning: helper.lockNote(overrides, 'registryRequestContext'),
+        }) }}
+
+    </div>
+
+    {# Outside the toggle: retention governs the purge, which keeps running. #}
+    {{ forms.textField({
+        label: 'Keep records for'|t('cookie-consent-kit'),
+        instructions: 'Months kept beyond the life of the consent cookie itself, so a proof outlives what it attests. Zero keeps every record until it is purged by hand.'|t('cookie-consent-kit'),
+        id: 'registryGrace',
+        name: 'registryGrace',
+        type: 'number',
+        min: 0,
+        size: 5,
+        value: settings.registryGrace,
+        errors: settings.getErrors('registryGrace'),
+        disabled: overrides.registryGrace is defined,
+        warning: helper.lockNote(overrides, 'registryGrace'),
+    }) }}
+
+{% endblock %}

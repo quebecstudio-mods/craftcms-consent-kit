@@ -1,0 +1,193 @@
+{#
+    The register, newest first. A row says what was answered; the screen it
+    was answered on is one click away.
+#}
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+{% import 'cookie-consent-kit/registry/_macros' as reads %}
+
+{% set title = 'Consent register'|t('cookie-consent-kit') %}
+
+{% set crumbs = [
+    { label: 'Consent'|t('cookie-consent-kit'), url: url('cookie-consent-kit/registry') },
+] %}
+
+{% block actionButton %}
+    {% if canExport and total %}
+        <button type="button" id="qsm-export-btn" class="btn" data-icon="download">
+            {{ 'Export…'|t('cookie-consent-kit') }}
+        </button>
+
+        <div id="qsm-export-hud" class="hidden">
+            <form method="get" action="{{ url('cookie-consent-kit/registry/export') }}" style="min-width: 16rem;">
+                {% for key, value in filters %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endfor %}
+
+                {{ forms.selectField({
+                    label: 'Format'|t('cookie-consent-kit'),
+                    name: 'format',
+                    options: [
+                        { label: 'CSV', value: 'csv' },
+                        { label: 'Excel', value: 'xlsx' },
+                        { label: 'JSON'|t('cookie-consent-kit') ~ ' — ' ~ 'with the wording of every screen'|t('cookie-consent-kit'), value: 'json' },
+                    ],
+                }) }}
+
+                {{ forms.textField({
+                    label: 'Limit'|t('cookie-consent-kit'),
+                    name: 'limit',
+                    type: 'number',
+                    min: 1,
+                    placeholder: 'No limit'|t('cookie-consent-kit'),
+                }) }}
+
+                <button type="submit" class="btn submit fullwidth">{{ 'Export'|t('cookie-consent-kit') }}</button>
+            </form>
+        </div>
+
+        {% js %}
+            const $trigger = $('#qsm-export-btn');
+            const hud = new Garnish.HUD($trigger, $('#qsm-export-hud').removeClass('hidden'), {
+                showOnInit: false,
+            });
+
+            $trigger.on('click', () => hud.showing ? hud.hide() : hud.show());
+        {% endjs %}
+    {% endif %}
+{% endblock %}
+
+{# The layout renders this at the foot of the content pane. #}
+{% set footer %}
+    <span class="light">{{ '{total} decisions'|t('cookie-consent-kit', { total: total }) }}</span>
+
+    {% if pages > 1 %}
+        <nav class="flex flex-nowrap">
+            {% if page > 1 %}
+                <a class="btn" href="{{ url('cookie-consent-kit/registry', filters|merge({ sort: sort, dir: dir, page: page - 1 })) }}">{{ 'Previous'|t('app') }}</a>
+            {% endif %}
+            <span class="light">{{ 'Page {page} of {pages}'|t('cookie-consent-kit', { page: page, pages: pages }) }}</span>
+            {% if page < pages %}
+                <a class="btn" href="{{ url('cookie-consent-kit/registry', filters|merge({ sort: sort, dir: dir, page: page + 1 })) }}">{{ 'Next'|t('app') }}</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endset %}
+
+{% css %}
+    table.data thead th a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    table.data thead th a:hover {
+        color: var(--link-color);
+    }
+{% endcss %}
+
+{% macro sortable(label, column, sort, dir, filters) %}
+    {% set next = (sort == column and dir == 'asc') ? 'desc' : 'asc' %}
+    <a href="{{ url('cookie-consent-kit/registry', filters|merge({ sort: column, dir: next })) }}">
+        {{ label }}
+        {%- if sort == column %} <span aria-hidden="true">{{ dir == 'asc' ? '↑' : '↓' }}</span>{% endif -%}
+    </a>
+{% endmacro %}
+
+{% block content %}
+    {% if suspended %}
+        <p class="warning">
+            {{ 'This install asks for a register in its configuration. Without the Pro edition it stays dormant, and nothing is written. Records already kept remain readable, exportable and purgeable.'|t('cookie-consent-kit') }}
+        </p>
+    {% elseif not collecting %}
+        <p class="warning">
+            {{ 'Collection is off. What is listed here was recorded while it was on.'|t('cookie-consent-kit') }}
+        </p>
+    {% endif %}
+
+    <form method="get" action="{{ url('cookie-consent-kit/registry') }}" class="flex" style="align-items: flex-end; gap: 1rem; margin-bottom: 1.5rem;">
+        {% if multisite %}
+            {{ forms.selectField({
+                label: 'Site'|t('app'),
+                name: 'siteId',
+                value: filters.siteId ?? '',
+                options: [{ label: 'All sites'|t('cookie-consent-kit'), value: '' }]|merge(
+                    sites|map(s => { label: s.name, value: s.id })
+                ),
+            }) }}
+        {% endif %}
+
+        {{ forms.selectField({
+            label: 'Granted'|t('cookie-consent-kit'),
+            name: 'outcome',
+            value: filters.outcome ?? '',
+            options: [{ label: 'Any'|t('cookie-consent-kit'), value: '' }]|merge(
+                outcomes|map(o => {
+                    label: o == 'all'
+                        ? 'Everything'|t('cookie-consent-kit')
+                        : (o == 'none' ? 'Required only'|t('cookie-consent-kit') : 'Some categories'|t('cookie-consent-kit')),
+                    value: o,
+                })
+            ),
+        }) }}
+
+        {{ forms.textField({ label: 'From'|t('cookie-consent-kit'), name: 'from', type: 'date', value: filters.from ?? '' }) }}
+        {{ forms.textField({ label: 'To'|t('cookie-consent-kit'), name: 'to', type: 'date', value: filters.to ?? '' }) }}
+
+        <div class="field">
+            <button type="submit" class="btn submit">{{ 'Filter'|t('app') }}</button>
+        </div>
+
+        {% if filters %}
+            <div class="field">
+                <a class="btn" href="{{ url('cookie-consent-kit/registry', { sort: sort, dir: dir }) }}">
+                    {{ 'Clear filters'|t('cookie-consent-kit') }}
+                </a>
+            </div>
+        {% endif %}
+    </form>
+
+    {% if rows|length %}
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>{{ _self.sortable('Decided'|t('cookie-consent-kit'), 'decidedAt', sort, dir, filters) }}</th>
+                    {% if multisite %}<th>{{ _self.sortable('Site'|t('app'), 'siteHandle', sort, dir, filters) }}</th>{% endif %}
+                    <th>{{ _self.sortable('Answer'|t('cookie-consent-kit'), 'action', sort, dir, filters) }}</th>
+                    <th>{{ _self.sortable('Granted'|t('cookie-consent-kit'), 'outcome', sort, dir, filters) }}</th>
+                    {% if users %}<th>{{ 'Signed in as'|t('cookie-consent-kit') }}</th>{% endif %}
+                    <th>{{ 'Screen'|t('cookie-consent-kit') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td><a href="{{ url('cookie-consent-kit/registry/' ~ row.id) }}">{{ row.decidedAt }}</a></td>
+                        {% if multisite %}
+                            <td>
+                                <span class="token">{{ row.siteHandle }}</span>
+                                <span class="light">{{ row.language }}</span>
+                            </td>
+                        {% endif %}
+                        <td>{{ reads.action(row.action) }} <span class="light">{{ reads.origin(row.origin) }}</span></td>
+                        <td>{{ reads.outcome(row.outcome) }}</td>
+                        {% if users %}
+                            <td>
+                                {% if users[row.userId] is defined %}
+                                    {{ elementChip(users[row.userId], { hyperlink: true }) }}
+                                {% else %}
+                                    <span class="light">—</span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        <td><code title="{{ row.hash }}">{{ row.hash|slice(0, 12) }}</code></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <div class="zilch">
+            <p>{{ 'No decision recorded yet.'|t('cookie-consent-kit') }}</p>
+        </div>
+    {% endif %}
+{% endblock %}

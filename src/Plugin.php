@@ -6,23 +6,32 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin as BasePlugin;
 use craft\events\PluginEvent;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\ProjectConfig as ProjectConfigHelper;
 use craft\helpers\UrlHelper;
 use craft\models\Site;
+use craft\services\Gc;
 use craft\services\Plugins;
+use craft\services\UserPermissions;
+use craft\services\Utilities;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
 use QuebecStudioMods\ConsentKit\Core\Bootstrap;
 use QuebecStudioMods\ConsentKit\Core\Languages;
 use QuebecStudioMods\ConsentKit\Core\Paths;
+use QuebecStudioMods\ConsentKit\Core\RecordScript;
 use QuebecStudioMods\ConsentKit\Core\SettingsMerger;
 use QuebecStudioMods\ConsentKit\Core\SiteContext;
 use QuebecStudioMods\ConsentKit\CraftCms\Models\Settings;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Consent;
+use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
+use QuebecStudioMods\ConsentKit\CraftCms\Services\Presentations;
 use QuebecStudioMods\ConsentKit\CraftCms\Twig\ConsentExtension;
+use QuebecStudioMods\ConsentKit\CraftCms\Utilities\RegistryPurge;
 use QuebecStudioMods\ConsentKit\CraftCms\Variables\ConsentVariable;
 use QuebecStudioMods\ConsentKit\CraftCms\Web\Assets\ConsentAsset;
 use yii\base\Event;
@@ -35,13 +44,21 @@ use yii\base\Event;
  * visitor would leak from one to another.
  *
  * @property-read Consent $consent
+ * @property-read Decisions $decisions
+ * @property-read Presentations $presentations
  * @method Settings getSettings()
  */
 class Plugin extends BasePlugin
 {
     public const NAME = 'Cookie Consent Kit';
 
-    public string $schemaVersion = '0.3.0';
+    public const EDITION_STANDARD = 'standard';
+
+    public const EDITION_PRO = 'pro';
+
+    public string $schemaVersion = '0.4.0';
+
+    public bool $hasCpSection = true;
 
     public bool $hasCpSettings = true;
 
@@ -52,25 +69,42 @@ class Plugin extends BasePlugin
      */
     public bool $hasReadOnlyCpSettings = true;
 
+    /**
+     * `standard` stays first: it is the handle every install already carries,
+     * and the order is what `is()` compares.
+     */
+    public static function editions(): array
+    {
+        return [self::EDITION_STANDARD, self::EDITION_PRO];
+    }
+
     public static function config(): array
     {
         return [
             'components' => [
                 'consent' => ['class' => Consent::class],
+                'presentations' => ['class' => Presentations::class],
+                'decisions' => ['class' => Decisions::class],
             ],
         ];
     }
 
     public function init(): void
     {
+
+        $this->controllerNamespace = __NAMESPACE__ . '\\Controllers';
+
         parent::init();
 
         $this->name = $this->displayName();
 
         $this->registerTwigVariable();
+        $this->registerPermissions();
         $this->registerCpRoutes();
         $this->registerCoreTemplates();
         $this->registerSeeding();
+        $this->registerUtilities();
+        $this->registerPurge();
 
         $request = Craft::$app->getRequest();
 
@@ -82,6 +116,7 @@ class Plugin extends BasePlugin
 
         Craft::$app->onInit(function () {
             $this->registerBootstrapScript();
+            $this->registerRecordScript();
 
             Craft::$app->getView()->registerAssetBundle(ConsentAsset::class);
         });
@@ -94,13 +129,10 @@ class Plugin extends BasePlugin
         return new Settings();
     }
 
-    /** The product name is not translated; a site can still rename it. */
+    /** The product name is not translated. */
     public function displayName(): string
     {
-        /** @var Settings $settings */
-        $settings = $this->getSettings();
-
-        return trim($settings->pluginName) ?: self::NAME;
+        return self::NAME;
     }
 
     /** Craft's generic settings screen redirects to the plugin's own page. */
@@ -387,11 +419,82 @@ class Plugin extends BasePlugin
             static function (RegisterUrlRulesEvent $event) {
                 $event->rules['cookie-consent-kit/settings'] = 'cookie-consent-kit/settings/general';
 
-                foreach (['general', 'cookie', 'policy', 'cookies', 'behaviour', 'video', 'appearance'] as $pane) {
+                foreach (['general', 'cookie', 'policy', 'cookies', 'behaviour', 'video', 'appearance', 'registry'] as $pane) {
                     $event->rules['cookie-consent-kit/settings/' . $pane] = 'cookie-consent-kit/settings/' . $pane;
                 }
+
+                $event->rules['cookie-consent-kit/registry'] = 'cookie-consent-kit/registry/index';
+                $event->rules['cookie-consent-kit/registry/export'] = 'cookie-consent-kit/registry/export';
+                $event->rules['cookie-consent-kit/registry/<id:\d+>'] = 'cookie-consent-kit/registry/detail';
             }
         );
+    }
+
+    /**
+     * Reading a register, exporting it and purging it are three different
+     * trusts: the person who has to produce a proof is not necessarily the one
+     * allowed to destroy one.
+     */
+    private function registerPermissions(): void
+    {
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function (RegisterUserPermissionsEvent $event) {
+                $event->permissions[] = [
+                    'heading' => $this->displayName(),
+                    'permissions' => [
+                        'cookieConsentKit:viewRegistry' => [
+                            'label' => Craft::t('cookie-consent-kit', 'View the consent register'),
+                            'nested' => [
+                                'cookieConsentKit:exportRegistry' => [
+                                    'label' => Craft::t('cookie-consent-kit', 'Export the consent register'),
+                                ],
+                                'cookieConsentKit:purgeRegistry' => [
+                                    'label' => Craft::t('cookie-consent-kit', 'Purge the consent register'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+            }
+        );
+    }
+
+    /** Retention runs with Craft's own housekeeping; no scheduler to install. */
+    private function registerPurge(): void
+    {
+        Event::on(
+            Gc::class,
+            Gc::EVENT_RUN,
+            function () {
+                $this->decisions->purge();
+            }
+        );
+    }
+
+    private function registerUtilities(): void
+    {
+        Event::on(
+            Utilities::class,
+            Utilities::EVENT_REGISTER_UTILITIES,
+            static function (RegisterComponentTypesEvent $event) {
+                $event->types[] = RegistryPurge::class;
+            }
+        );
+    }
+
+    /** No entry where there is no register to read: neither running nor holding anything. */
+    public function getCpNavItem(): ?array
+    {
+        if (!$this->decisions->isVisible()) {
+            return null;
+        }
+
+        $item = parent::getCpNavItem();
+        $item['url'] = 'cookie-consent-kit/registry';
+
+        return $item;
     }
 
     /** The core package's Twig templates, rendered as `cookie-consent-core/<name>`. */
@@ -529,5 +632,20 @@ class Plugin extends BasePlugin
         $js = Bootstrap::script($this->consent->bootstrapConfig());
 
         Craft::$app->getView()->registerScript($js, View::POS_HEAD, [], 'qsm-consent-kit-bootstrap');
+    }
+
+    /** The reporting script, only where there is a register to report to. */
+    private function registerRecordScript(): void
+    {
+        if (!$this->decisions->isCollecting()) {
+            return;
+        }
+
+        $js = RecordScript::build(
+            UrlHelper::actionUrl('cookie-consent-kit/record'),
+            ['site' => Craft::$app->getSites()->getCurrentSite()->id],
+        );
+
+        Craft::$app->getView()->registerScript($js, View::POS_END, [], 'qsm-consent-kit-registry');
     }
 }

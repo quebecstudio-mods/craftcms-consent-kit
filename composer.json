@@ -27,7 +27,7 @@
     "require": {
         "php": ">=8.2",
         "craftcms/cms": "^5.0.0",
-        "quebecstudio-mods/consent-kit-core": "^1.0"
+        "quebecstudio-mods/consent-kit-core": "^1.1"
     },
     "autoload": {
         "psr-4": {

@@ -1,5 +1,37 @@
 # Changelog
 
+## 5.0.3 - 2026-09-23
+
+### Added
+
+- **A consent register, in the Pro edition.** Each decision is recorded as the
+  browser makes it, with the server's clock, the site, the categories answered
+  and a fingerprint of the wording that was on screen. The server replays its
+  own configuration to compute that fingerprint, so a browser cannot claim to
+  have been shown something else, and the page carries no trace of it — the
+  HTML stays identical for every visitor and cacheable.
+- The register is read from its own control panel section, gated by three
+  permissions: viewing, exporting and purging. A decision's screen is shown as
+  it was worded then, not as the site words it today.
+- Exports in CSV, Excel and JSON. The JSON carries the wording of every screen
+  and describes how the fingerprint is computed, so a third party can recompute
+  it without the plugin.
+- Retention runs with Craft CMS's garbage collection — the life of the consent
+  cookie plus a configurable grace — and a utility purges by hand.
+
+### Fixed
+
+- The settings screen and the YouTube thumbnail action resolve again. Their
+  controllers declare a capitalised namespace, where Craft CMS looked for a
+  lowercased one.
+
+### Changed
+
+- The `pluginName` setting is gone. The control panel never read it: the
+  plugin's name comes from its `composer.json`.
+- A new icon, in the series' shape: a rounded square in Québec Studio's
+  blue, carrying the plugin's object.
+
 ## 5.0.2 - 2026-09-23
 
 ### Changed

@@ -9,13 +9,13 @@
 {# No save button when nothing can be saved: the settings live in the project
    config, which `allowAdminChanges` closes in production. #}
 {% set fullPageForm = not readOnly %}
-{% set docTitle = title ~ ' - ' ~ pluginName %}
+{% set docTitle = title ~ ' - ' ~ 'Cookie Consent Kit' %}
 
 {# The `site` param is carried everywhere: it drives the edited language. #}
 {% set siteParam = multisite and selectedSite ? { site: selectedSite.handle } : {} %}
 
 {% set crumbs = [
-    { label: pluginName, url: url('cookie-consent-kit/settings', siteParam) },
+    { label: 'Cookie Consent Kit', url: url('cookie-consent-kit/settings', siteParam) },
     { label: title, url: url('cookie-consent-kit/settings/' ~ pane, siteParam) },
 ] %}
 
@@ -44,7 +44,42 @@
     behaviour: 'Behaviour'|t('cookie-consent-kit'),
     video: 'Video'|t('cookie-consent-kit'),
     appearance: 'Appearance'|t('cookie-consent-kit'),
+    registry: 'Register'|t('cookie-consent-kit'),
 } %}
+
+{% set proPanes = ['registry'] %}
+
+{# Craft's own edition badge is styled in PluginManager.css, loaded only by
+   the plugin settings index. #}
+{% css %}
+    .qsm-edition {
+        border: 1px solid var(--fg-subtle);
+        border-radius: 3px;
+        color: var(--fg-subtle);
+        display: inline-block;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        line-height: 16px;
+        margin-inline-start: 7px;
+        padding-inline: 5px;
+        text-transform: uppercase;
+        vertical-align: middle;
+    }
+
+    nav li a {
+        align-items: center;
+        display: flex;
+    }
+
+    nav .qsm-edition {
+        margin-inline-start: auto;
+    }
+
+    nav a.sel .qsm-edition {
+        border-color: currentColor;
+        color: currentColor;
+    }
+{% endcss %}
 
 {% block sidebar %}
     <nav>
@@ -52,7 +87,10 @@
             {% for handle, label in panes %}
                 <li>
                     <a href="{{ url('cookie-consent-kit/settings/' ~ handle, siteParam) }}"
-                       {% if handle == pane %}class="sel"{% endif %}>{{ label }}</a>
+                       {% if handle == pane %}class="sel"{% endif %}>
+                        {{ label }}
+                        {% if handle in proPanes %}<span class="qsm-edition">{{ 'Pro'|t('cookie-consent-kit') }}</span>{% endif %}
+                    </a>
                 </li>
             {% endfor %}
         </ul>
