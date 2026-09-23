@@ -17,7 +17,7 @@ Installing:
 
 ## Editions
 
-The plugin installs in Lite, the free edition, which this documentation
+The plugin installs in Standard, the free edition, which this documentation
 describes in full.
 
 ## First steps
