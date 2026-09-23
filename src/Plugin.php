@@ -48,17 +48,6 @@ class Plugin extends BasePlugin
     /** The panes render read-only themselves when admin changes are off. */
     public bool $hasReadOnlyCpSettings = true;
 
-    /**
-     * Collecting and honouring consent is Standard; Pro adds the consent record.
-     * No setting is withheld by edition: the guard would be decorative, since
-     * `edition` is a project config value no licence enforces outside the
-     * Plugin Store.
-     */
-    public static function editions(): array
-    {
-        return ['standard', 'pro'];
-    }
-
     protected array $events = [
         PageStarting::class => RegisterConsentAssets::class,
         PageEnded::class => InjectBanner::class,

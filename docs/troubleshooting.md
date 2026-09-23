@@ -1,6 +1,6 @@
 # Troubleshooting — Craft CMS 6
 
-See also the platform-independent [Testing](../testing.md) page.
+See also the [Testing](testing.md) checklist.
 
 ## The banner does not appear
 
@@ -35,4 +35,4 @@ unpacked.
 
 ---
 
-[← Documentation](../../README.md#documentation)
+[← Documentation](../README.md#documentation)

@@ -5,8 +5,9 @@ under the GDPR. Craft CMS 5 is covered by the
 [`5.x` branch](https://github.com/quebecstudio-mods/craftcms-consent-kit/tree/5.x).
 
 - No third-party cookie is set before consent.
-- No dependency beyond Craft CMS and the plugin's own core package,
-  `quebecstudio-mods/consent-kit-core`.
+- Nothing to install beyond the plugin and its core package,
+  `quebecstudio-mods/consent-kit-core`, which rely on what Craft CMS already
+  ships.
 - No template change required.
 - English and French included; a project adds any language with one file.
 - YouTube videos load on click, with the thumbnail served by the site.
@@ -32,25 +33,17 @@ composer require quebecstudio-mods/craftcms-consent-kit
 php artisan craft:plugin:install cookie-consent-kit
 ```
 
-Requires Craft CMS 6 and PHP 8.5. See [Installation](docs/craft/installation.md)
+Requires Craft CMS 6 and PHP 8.5. See [Installation](docs/installation.md)
 for the first steps and upgrading from 5.x.
 
 ## Documentation
 
-**Craft CMS 6**
-
 | Page | Content |
 |---|---|
-| [Installation](docs/craft/installation.md) | Requirements, editions, first steps, upgrading from 5.x |
-| [Configuration](docs/craft/configuration.md) | Control panel, config file, environment variables, wording files |
-| [Templates](docs/craft/templates.md) | Twig and Blade API, cookie table, YouTube facade, overriding templates |
-| [Multisite](docs/craft/multisite.md) | Per-site and install-wide settings |
-| [Troubleshooting](docs/craft/troubleshooting.md) | Banner missing, assets, saving |
-
-**Common**
-
-| Page | Content |
-|---|---|
+| [Installation](docs/installation.md) | Requirements, first steps, upgrading from 5.x |
+| [Configuration](docs/configuration.md) | Control panel, config file, environment variables, wording files |
+| [Templates](docs/templates.md) | Twig and Blade API, cookie table, YouTube facade, overriding templates |
+| [Multisite](docs/multisite.md) | Per-site and install-wide settings |
 | [Settings](docs/settings.md) | Every setting, per-site keys, categories and cookies |
 | [Wording](docs/wording.md) | Language files, keys, adding a language |
 | [Styling](docs/styling.md) | CSS variables, dark scheme, classes, safe areas |
@@ -58,6 +51,7 @@ for the first steps and upgrading from 5.x.
 | [Integrations](docs/integrations.md) | GA4, Matomo, Global Privacy Control, recipes, YouTube facade |
 | [Privacy policy](docs/privacy-policy.md) | Policy link, cookie table, markers |
 | [Testing](docs/testing.md) | Checklist, constraints |
+| [Troubleshooting](docs/troubleshooting.md) | Banner missing, assets, saving |
 
 ## Not covered
 

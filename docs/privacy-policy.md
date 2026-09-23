@@ -16,8 +16,8 @@ accepts a `$ENV_VAR`.
 ## The cookie table
 
 The table lists the declared cookies of each visible category: name, provider,
-purpose, retention. How to place it depends on the platform — for Craft CMS, see
-[Templates](craft/templates.md#cookie-table).
+purpose, retention. To place it, see
+[Templates](templates.md#cookie-table).
 
 ### Options
 

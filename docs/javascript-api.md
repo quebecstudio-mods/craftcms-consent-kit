@@ -11,12 +11,20 @@ window.qsmConsentKit.acceptAll()
 window.qsmConsentKit.refuseAll()
 window.qsmConsentKit.open()
 window.qsmConsentKit.close()
+window.qsmConsentKit.ready                     // true once the script has run
 
 document.addEventListener('qsm-consent-kit:change', e => e.detail);
 ```
 
 `open()` reopens the banner. Call it from the site's own link when
 `reopenButton` is off.
+
+`get()` returns `null` until a decision is made. Under Global Privacy Control it
+returns a refusal carrying `gpc: true`, with no category granted — a state the
+browser signals and the plugin never writes to a cookie.
+
+The `<head>` bootstrap leaves `window.qsmConsentKitBootstrap = { state }` behind,
+which is what lets a video facade lift before the main script has loaded.
 
 ## Conditional tags
 
@@ -29,7 +37,8 @@ A tag marked with a category is activated once that category is granted:
 ```
 
 - A script is recreated with a runnable type; an iframe gets its `src`.
-- Tags are activated in document order.
+- Tags are activated one category at a time, in inventory order, and in
+  document order within a category.
 - Activated elements carry `data-consent-done`.
 
 A vendor's `<noscript>` fallback is fetched by the browser regardless of

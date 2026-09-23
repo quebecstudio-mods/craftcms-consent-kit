@@ -1,6 +1,6 @@
 # Configuration — Craft CMS 6
 
-Every setting is described in [Settings](../settings.md). This page covers
+Every setting is described in [Settings](settings.md). This page covers
 where they are set.
 
 ## Control panel
@@ -73,7 +73,7 @@ return [
   listed as a Fallback language choice.
 - Missing keys come from the fallback language, then from English.
 
-See [Wording](../wording.md) for the file shape and the keys.
+See [Wording](wording.md) for the file shape and the keys.
 
 ## Categories
 
@@ -83,4 +83,4 @@ written on install, and the Cookie inventory pane is read-only.
 
 ---
 
-[← Documentation](../../README.md#documentation)
+[← Documentation](../README.md#documentation)

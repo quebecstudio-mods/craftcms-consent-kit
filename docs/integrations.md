@@ -143,8 +143,7 @@ A YouTube video renders as a poster with a play button. Clicking it loads
 `youtube-nocookie.com` for that video. Nothing is requested from Google before
 the click. Other video hosts are not handled.
 
-How to render it depends on the platform — for Craft CMS, see
-[Templates](craft/templates.md#youtube-facade).
+To render it, see [Templates](templates.md#youtube-facade).
 
 ### Poster
 

@@ -1,8 +1,7 @@
 # Settings
 
-The settings every platform reads. Where they are stored and how they are
-edited depends on the platform — for Craft CMS, see
-[Configuration](craft/configuration.md).
+Every setting the plugin reads. Where they are stored and how they are edited
+is covered by [Configuration](configuration.md).
 
 ## Reference
 
@@ -16,7 +15,7 @@ edited depends on the platform — for Craft CMS, see
 | `policySource` | per site | — | `entry` or `url`. Inferred from what is set when absent. |
 | `policyEntry` | per site | — | `[<entry id>]`. Craft only. |
 | `policyUrl` | string or per site | `/politique-de-confidentialite` | Policy link. Accepts `$ENV_VAR`. A site missing from a map gets the default. |
-| `autoInject` | bool | `true` | Appends the banner to every page. |
+| `autoInject` | bool | `true` | Appends the banner to every site page. Never to the control panel. |
 | `templateRoot` | string | `_consent` | Site template folder whose templates replace the plugin's. |
 | `colorScheme` | string | `auto` | `auto`, `light` or `dark`. |
 | `backdropStyle` | string | `blur` | Behind the manage panel: `blur`, `dim` or `none`. |

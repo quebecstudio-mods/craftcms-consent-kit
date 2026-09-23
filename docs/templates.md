@@ -29,7 +29,7 @@ output.
 
 ## Cookie table
 
-Options are listed in [Privacy policy](../privacy-policy.md#options).
+Options are listed in [Privacy policy](privacy-policy.md#options).
 
 ```twig
 {{ craft.consent.cookieTable() }}
@@ -47,7 +47,7 @@ One section per category, with the template's own prose:
 {% endfor %}
 ```
 
-Markers in an entry's content — see [Markers](../privacy-policy.md#markers-in-content):
+Markers in an entry's content — see [Markers](privacy-policy.md#markers-in-content):
 
 ```twig
 {{ entry.body|withCookieTable }}
@@ -82,7 +82,7 @@ The editor shows the block as a card; the table appears on the page.
 An empty id renders nothing. Posters fetched from YouTube are cached in
 `storage/runtime/consent-thumbnails/` and served by the action
 `actions/cookie-consent-kit/thumbnail`. See
-[YouTube facade](../integrations.md#youtube-facade).
+[YouTube facade](integrations.md#youtube-facade).
 
 ## Overriding templates
 
@@ -131,4 +131,4 @@ Keep the `data-qsm-ck-*` attributes: the script finds every control through them
 
 ---
 
-[← Documentation](../../README.md#documentation)
+[← Documentation](../README.md#documentation)

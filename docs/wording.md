@@ -1,11 +1,10 @@
 # Wording
 
-Visitor-facing wording comes from language files, one per language:
-`src/lang/<language>.php` in `quebecstudio-mods/consent-kit-core`. English and French
-are shipped.
+Visitor-facing wording comes from language files, one per language. English and
+French are shipped.
 
-How a project replaces strings or adds a language depends on the platform — for
-Craft, see [Wording](craft/configuration.md#wording).
+To replace a string or add a language in a project, see
+[Wording](configuration.md#wording).
 
 ## File shape
 
@@ -63,9 +62,8 @@ per site.
 
 ## Adding a language
 
-A file `src/lang/<language>.php` in the core package (`de.php`, `pt-BR.php`), copied from
-`en.php` and translated, ships the language with every integration: sites in that
-language use it, and it is listed as a `defaultLanguage` choice.
+A project adds one by translating a copy of the shipped English file — see
+[Wording](configuration.md#wording).
 
 ---
 
