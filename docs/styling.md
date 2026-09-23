@@ -173,10 +173,23 @@ set them under a selector of their own:
 .qsm-ck .qsm-ck-button { text-transform: uppercase; }
 ```
 
-`qsm-ck-root` `qsm-ck-banner` `qsm-ck-title` `qsm-ck-body` `qsm-ck-link` (+ `--policy`)
-`qsm-ck-actions` `qsm-ck-button` (+ `--choice` `--accept` `--refuse` `--manage`
-`--save`) `qsm-ck-reopen` `qsm-ck-dialog` `qsm-ck-category` `qsm-ck-switch` `qsm-ck-details`
-`qsm-ck-table` `qsm-ck-gpc` `qsm-ck-video` `qsm-ck-video-poster` `qsm-ck-video-scrim`
+`qsm-ck` is the container; every other class sits inside it.
+
+**Banner** — `qsm-ck-root` `qsm-ck-banner` `qsm-ck-title` `qsm-ck-body` `qsm-ck-text`
+`qsm-ck-link` (+ `--policy`) `qsm-ck-actions` `qsm-ck-button` (+ `--choice` `--accept`
+`--refuse` `--manage` `--save`) `qsm-ck-reopen`
+
+**Manage panel** — `qsm-ck-dialog` (+ `-inner` `-head` `-title` `-actions`) `qsm-ck-close`
+`qsm-ck-categories` `qsm-ck-category` `qsm-ck-category-desc` `qsm-ck-switch`
+`qsm-ck-switch-label` `qsm-ck-checkbox` `qsm-ck-always` `qsm-ck-details` (+ `-toggle`
+`-inner`) `qsm-ck-table` `qsm-ck-gpc` `qsm-ck-status`
+
+**Video facade** — `qsm-ck-video` `qsm-ck-video-poster` (+ `--empty`) `qsm-ck-video-scrim`
+`qsm-ck-video-button` `qsm-ck-video-play` (+ `-bg` `-arrow`) `qsm-ck-video-text`
+`qsm-ck-video-title` `qsm-ck-video-cta` `qsm-ck-video-notice`
+
+The cookie table rendered inside a page carries its own classes, which a site
+chooses — see [Privacy policy](privacy-policy.md#classes).
 
 | Class | Reaches |
 | --- | --- |

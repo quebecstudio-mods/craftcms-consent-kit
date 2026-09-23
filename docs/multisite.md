@@ -8,7 +8,7 @@ On a single-site install, the site menu and Copy from are not shown.
 |---|---|
 | `policySource`, `policyEntry`, `policyUrl` | per site |
 | category `label`, `description`; cookie `purpose`, `duration` | per site |
-| banner wording | per language — see [Wording](../wording.md) |
+| banner wording | per language — see [Wording](wording.md) |
 | category and cookie handles | install-wide |
 | every other setting | install-wide |
 
@@ -23,8 +23,9 @@ banner template in their own folder — see
   The chosen site stays selected across panes.
 - Saving writes that site's values; other sites keep theirs.
 - **Copy from**, beside the save button on the Cookie inventory pane, fills the
-  form with another site's wording, blank fields included. Nothing is saved
-  until the form is saved.
+  form with the wording another site displays — resolved, so a field that site
+  leaves blank arrives filled from its own fallback. It asks for confirmation,
+  and nothing is saved until the form is saved.
 - The categories and cookies themselves are shared: adding or removing one
   applies to every site.
 
@@ -47,4 +48,4 @@ third parties, declare all of them.
 
 ---
 
-[← Documentation](../../README.md#documentation)
+[← Documentation](../README.md#documentation)
