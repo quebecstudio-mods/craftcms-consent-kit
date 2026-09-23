@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.1 - 2026-09-22
+
+### Changed
+
+- **The free edition is `standard`, not `lite`.** Craft prints the handle as the
+  edition name in the control panel, and an install carrying `lite` moves to it
+  on its own. Pro is unchanged.
+
 ## 5.0.0 - 2026-09-22
 
 ### Added

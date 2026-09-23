@@ -53,14 +53,14 @@ class Plugin extends BasePlugin
     public bool $hasReadOnlyCpSettings = true;
 
     /**
-     * Collecting and honouring consent is Lite; Pro adds the consent record.
+     * Collecting and honouring consent is Standard; Pro adds the consent record.
      * No setting is withheld by edition: the guard would be decorative, since
      * `edition` is a project config value no licence enforces outside the
      * Plugin Store.
      */
     public static function editions(): array
     {
-        return ['lite', 'pro'];
+        return ['standard', 'pro'];
     }
 
     public static function config(): array
