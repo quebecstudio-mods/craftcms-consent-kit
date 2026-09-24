@@ -1,10 +1,11 @@
 <?php
 
 use QuebecStudioMods\ConsentKit\Core\Paths;
+use QuebecStudioMods\ConsentKit\Core\Wording;
 
 /**
  * French wording for the control panel, shared with the Statamic addon so the
- * two products say the same thing. English is the source language: the keys
- * are the English strings as they appear in the code.
+ * two products say the same thing. The core writes `:name`; Craft CMS's own
+ * translator substitutes `{name}`.
  */
-return Paths::cpStrings('fr');
+return Wording::braces(Paths::cpStrings('fr'));

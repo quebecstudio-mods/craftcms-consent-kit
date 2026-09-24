@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.0.5 - 2026-09-24
+
+### Changed
+
+- The English control panel reads its titles from the core, in the casing the
+  Statamic addon uses and that Craft CMS itself follows: title case for labels,
+  titles, headings and column names, sentence case for permissions, buttons,
+  links and options.
+- The wording is written once, in one spelling. Craft CMS substitutes `{name}`
+  where Laravel substitutes `:name`, and the core converts on the way in.
+
 ## 6.0.4 - 2026-09-23
 
 ### Changed
