@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.0.4 - 2026-09-23
+
+### Changed
+
+- The register's shared parts now come from `consent-kit-core` 1.2: the actions
+  and origins a decision may carry, the columns it sorts on, and the date past
+  which a record has outlived what it attests. They were declared here as well,
+  and two copies of a rule are one too many.
+- The French control panel wording is read from the core, which the Statamic
+  addon reads too. It was an exact duplicate of 191 strings.
+
 ## 6.0.3 - 2026-09-23
 
 ### Added

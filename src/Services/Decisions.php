@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use QuebecStudioMods\ConsentKit\Core\Decision;
+use QuebecStudioMods\ConsentKit\Core\Registry;
 use QuebecStudioMods\ConsentKit\CraftCms\Db\Table;
 use QuebecStudioMods\ConsentKit\CraftCms\Models\Settings;
 use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
@@ -24,14 +25,7 @@ use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
  */
 class Decisions
 {
-    public const array ACTIONS = ['accept-all', 'refuse-all', 'save'];
-
-    public const array ORIGINS = ['banner', 'dialog', 'gpc'];
-
     public const string CACHE_ANY = 'cookie-consent-kit:registry:any';
-
-    /** Columns a reader may sort on. Anything else falls back to the date. */
-    public const array SORTABLE = ['decidedAt', 'siteHandle', 'action', 'outcome'];
 
     public function __construct(
         private readonly Consent $consent,
@@ -85,7 +79,7 @@ class Decisions
     {
         $site = Sites::getSiteById($siteId);
 
-        if (!$this->isCollecting() || !$site || !in_array($action, self::ACTIONS, true) || !in_array($origin, self::ORIGINS, true)) {
+        if (!$this->isCollecting() || !$site || !in_array($action, Decision::ACTIONS, true) || !in_array($origin, Decision::ORIGINS, true)) {
             return null;
         }
 
@@ -132,7 +126,7 @@ class Decisions
      */
     public function page(array $filters = [], int $page = 1, int $perPage = 50, string $sort = 'decidedAt', string $dir = 'desc'): array
     {
-        $sort = in_array($sort, self::SORTABLE, true) ? $sort : 'decidedAt';
+        $sort = in_array($sort, Registry::SORTABLE, true) ? $sort : 'decidedAt';
         $dir = strtolower($dir) === 'asc' ? 'asc' : 'desc';
         $total = $this->filtered($filters)->count();
 
@@ -233,14 +227,11 @@ class Decisions
     public function purge(): int
     {
         $settings = $this->settings();
+        $cutoff = Registry::cutoff($settings->cookieMaxAge, $settings->registryGrace);
 
-        if ($settings->registryGrace <= 0) {
+        if ($cutoff === null) {
             return 0;
         }
-
-        $cutoff = (new DateTimeImmutable())
-            ->modify('-'.$settings->cookieMaxAge.' seconds')
-            ->modify('-'.$settings->registryGrace.' months');
 
         $deleted = DB::table(Table::DECISIONS)->where('decidedAt', '<', $cutoff)->delete();
 

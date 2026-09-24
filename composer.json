@@ -27,7 +27,7 @@
     "require": {
         "php": "^8.5",
         "craftcms/cms": "^6.0.0",
-        "quebecstudio-mods/consent-kit-core": "^1.1"
+        "quebecstudio-mods/consent-kit-core": "^1.2"
     },
     "require-dev": {
         "laravel/pint": "^1.32",

@@ -4,6 +4,10 @@ Cookie consent banner for **Craft CMS 6**, built for Quebec's Law 25 and usable
 under the GDPR. Craft CMS 5 is covered by the
 [`5.x` branch](https://github.com/quebecstudio-mods/craftcms-consent-kit/tree/5.x).
 
+The same kit is also a Statamic addon (link to the Statamic Marketplace to
+come) and a Laravel package,
+[`quebecstudio-mods/laravel-consent-kit`](https://github.com/quebecstudio-mods/laravel-consent-kit).
+
 - No third-party cookie is set before consent.
 - Nothing to install beyond the plugin and its core package,
   `quebecstudio-mods/consent-kit-core`, which rely on what Craft CMS already

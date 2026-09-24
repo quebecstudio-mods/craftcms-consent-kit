@@ -22,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use QuebecStudioMods\ConsentKit\Core\Decision;
+use QuebecStudioMods\ConsentKit\Core\Registry;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Consent;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
 use QuebecStudioMods\ConsentKit\CraftCms\Web\Spreadsheet;
@@ -66,7 +67,7 @@ final class RegistryController
                 'rows' => $result['rows'],
                 'users' => $this->usersIn($result['rows']),
                 'outcomes' => Decision::OUTCOMES,
-                'sort' => in_array($sort, Decisions::SORTABLE, true) ? $sort : 'decidedAt',
+                'sort' => in_array($sort, Registry::SORTABLE, true) ? $sort : 'decidedAt',
                 'dir' => strtolower($dir) === 'asc' ? 'asc' : 'desc',
                 'total' => $result['total'],
                 'page' => $page,
