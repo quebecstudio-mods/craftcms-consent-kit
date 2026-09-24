@@ -28,6 +28,7 @@ use InvalidArgumentException;
 use Locale;
 use QuebecStudioMods\ConsentKit\Core\Defaults;
 use QuebecStudioMods\ConsentKit\Core\Resolver;
+use QuebecStudioMods\ConsentKit\Core\Settings\Catalogue;
 use QuebecStudioMods\ConsentKit\CraftCms\Models\Settings;
 use QuebecStudioMods\ConsentKit\CraftCms\Plugin;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
@@ -226,16 +227,12 @@ final class SettingsForms
 
         $fields[] = Heading::make('measurement-heading', t('Measurement', category: 'cookie-consent-kit'));
         $fields[] = MarkdownContent::make('measurement-tip', t('Which category a visitor has to accept before Google Consent Mode and Matomo are granted. A site that measures nothing leaves both on “None”.', category: 'cookie-consent-kit'));
-        $fields[] = $this->field(
+        $fields[] = $this->catalogued(
             'analyticsCategory',
-            t('Analytics category', category: 'cookie-consent-kit'),
-            t('Drives Matomo and Google analytics_storage.', category: 'cookie-consent-kit'),
             Choice::make('analyticsCategory')->presentation(ChoicePresentation::Select)->options($this->categoryOptions(t('None', category: 'cookie-consent-kit'))),
         );
-        $fields[] = $this->field(
+        $fields[] = $this->catalogued(
             'marketingCategory',
-            t('Marketing category', category: 'cookie-consent-kit'),
-            t('Drives Google ad_storage, ad_user_data and ad_personalization.', category: 'cookie-consent-kit'),
             Choice::make('marketingCategory')->presentation(ChoicePresentation::Select)->options($this->categoryOptions(t('None', category: 'cookie-consent-kit'))),
         );
 
@@ -393,30 +390,24 @@ final class SettingsForms
     private function appearance(): Form
     {
         $fields = [
-            $this->field(
+            $this->catalogued(
                 'colorScheme',
-                t('Colour scheme', category: 'cookie-consent-kit'),
-                t('“Auto” follows the visitor’s system preference. The dark scheme uses the palette set through --qsm-ck-dark-*.', category: 'cookie-consent-kit'),
                 Choice::make('colorScheme')->presentation(ChoicePresentation::Select)->options([
                     ['label' => t('Auto (recommended)', category: 'cookie-consent-kit'), 'value' => 'auto'],
                     ['label' => t('Light', category: 'cookie-consent-kit'), 'value' => 'light'],
                     ['label' => t('Dark', category: 'cookie-consent-kit'), 'value' => 'dark'],
                 ]),
             ),
-            $this->field(
+            $this->catalogued(
                 'backdropStyle',
-                t('Panel backdrop', category: 'cookie-consent-kit'),
-                t('Effect applied behind the “Manage” panel. Blur signals the modality without hiding the page.', category: 'cookie-consent-kit'),
                 Choice::make('backdropStyle')->presentation(ChoicePresentation::Select)->options([
                     ['label' => t('Blur (recommended)', category: 'cookie-consent-kit'), 'value' => 'blur'],
                     ['label' => t('Dim', category: 'cookie-consent-kit'), 'value' => 'dim'],
                     ['label' => t('None', category: 'cookie-consent-kit'), 'value' => 'none'],
                 ]),
             ),
-            $this->field(
+            $this->catalogued(
                 'displayMode',
-                t('Display mode', category: 'cookie-consent-kit'),
-                t('Full width along the bottom, or a box: floating in the middle, or in a bottom corner. On a narrow screen every mode is full width.', category: 'cookie-consent-kit'),
                 Choice::make('displayMode')->presentation(ChoicePresentation::Select)->options([
                     ['label' => t('Full width', category: 'cookie-consent-kit'), 'value' => 'full'],
                     ['label' => t('Floating box', category: 'cookie-consent-kit'), 'value' => 'floating'],
@@ -494,22 +485,16 @@ final class SettingsForms
     private function cookie(): Form
     {
         return Form::make([
-            $this->field(
+            $this->catalogued(
                 'cookieName',
-                t('Cookie name', category: 'cookie-consent-kit'),
-                t('Name of the cookie that remembers the visitor’s choice. Renaming it invalidates existing consents — bump the policy version at the same time.', category: 'cookie-consent-kit'),
                 Text::make('cookieName')->textExpanderTriggers(SelectOptions::getEnvTextExpanderTriggers()),
             )->required(),
-            $this->field(
+            $this->catalogued(
                 'cookieMaxAge',
-                t('Lifetime', category: 'cookie-consent-kit'),
-                t('In seconds. 15,552,000 is 180 days.', category: 'cookie-consent-kit'),
                 Number::make('cookieMaxAge'),
             ),
-            $this->field(
+            $this->catalogued(
                 'version',
-                t('Policy version', category: 'cookie-consent-kit'),
-                t('Bump this when a cookie appears in a non-necessary category, a category is added, or a purpose changes. Visitors will then be asked again.', category: 'cookie-consent-kit'),
                 Number::make('version'),
             ),
         ]);
@@ -543,23 +528,17 @@ final class SettingsForms
             ->warning($this->lockNote('registry'));
 
         if ($collecting) {
-            $fields[] = $this->lightswitch(
+            $fields[] = $this->cataloguedSwitch(
                 'registryUser',
-                t('Record the signed-in user', category: 'cookie-consent-kit'),
-                t('When a decision comes from someone signed in, their account is recorded with it. This is the one identity the server can assert rather than be told. Deleting an account clears the link and leaves the decision.', category: 'cookie-consent-kit'),
             );
 
-            $fields[] = $this->lightswitch(
+            $fields[] = $this->cataloguedSwitch(
                 'registryRequestContext',
-                t('Record where the decision came from', category: 'cookie-consent-kit'),
-                t('The visitor’s address and browser, stored as they are, so a record answers where a decision came from — which a hash cannot. It also makes the register personal data, to be declared and to be answered for. Off by default.', category: 'cookie-consent-kit'),
             );
         }
 
-        $fields[] = $this->field(
+        $fields[] = $this->catalogued(
             'registryGrace',
-            t('Keep records for', category: 'cookie-consent-kit'),
-            t('Months kept beyond the life of the consent cookie itself, so a proof outlives what it attests. Zero keeps every record until it is purged by hand.', category: 'cookie-consent-kit'),
             Number::make('registryGrace'),
         );
 
@@ -573,19 +552,15 @@ final class SettingsForms
             : t('YouTube videos currently load without consent.', category: 'cookie-consent-kit');
 
         $fields = [
-            $this->lightswitch(
+            $this->cataloguedSwitch(
                 'videoFacade',
-                t('YouTube facade', category: 'cookie-consent-kit'),
-                t('YouTube videos load only when the visitor clicks, so nothing reaches Google beforehand — the click is the consent, for that video alone. Only YouTube is covered: videos hosted elsewhere are untouched by this setting, and each template is responsible for them. Turning this off embeds YouTube directly, which lets Google set cookies as soon as the page is displayed, without any consent.', category: 'cookie-consent-kit'),
                 $facadeWarning,
             ),
         ];
 
         if ($this->settings->videoFacade) {
-            $fields[] = $this->lightswitch(
+            $fields[] = $this->cataloguedSwitch(
                 'videoThumbnails',
-                t('YouTube thumbnails', category: 'cookie-consent-kit'),
-                t('Show the real thumbnail on the facade. The server fetches it from YouTube once, caches it, and serves it from this domain — the visitor never contacts Google before clicking. Turning this off falls back to a plain gradient.', category: 'cookie-consent-kit'),
             );
             $fields[] = $this->field(
                 'videoConsentCategory',
@@ -605,38 +580,53 @@ final class SettingsForms
             : null;
 
         return Form::make([
-            $this->lightswitch(
+            $this->cataloguedSwitch(
                 'reopenButton',
-                t('Reopen tab', category: 'cookie-consent-kit'),
-                t('Small tab shown once the visitor has decided, so the banner can be reopened. Required for compliance — withdrawal must be as easy as consent. Turn it off only if the site provides its own entry point calling window.qsmConsentKit.open().', category: 'cookie-consent-kit'),
             ),
-            $this->field(
+            $this->catalogued(
                 'reopenPosition',
-                t('Reopen tab position', category: 'cookie-consent-kit'),
-                t('Bottom edge of the screen, on this side. “Auto” follows the display mode: on the right for a bottom right corner, on the left otherwise.', category: 'cookie-consent-kit'),
                 Choice::make('reopenPosition')->presentation(ChoicePresentation::Select)->options([
                     ['label' => t('Auto', category: 'cookie-consent-kit'), 'value' => 'auto'],
                     ['label' => t('Left', category: 'cookie-consent-kit'), 'value' => 'left'],
                     ['label' => t('Right', category: 'cookie-consent-kit'), 'value' => 'right'],
                 ]),
             ),
-            $this->lightswitch(
+            $this->cataloguedSwitch(
                 'gpcHidesBanner',
-                t('Skip the banner on a Global Privacy Control refusal', category: 'cookie-consent-kit'),
-                t('Some browsers send a signal meaning “I refuse optional cookies”. That refusal is always honoured: optional categories start off, and nothing is set before consent. This setting only decides whether the banner still asks. Turn it off to keep telling every visitor what the site uses. With the banner skipped, a visitor changes their mind from the reopen tab — so keep that tab on, or provide your own entry point.', category: 'cookie-consent-kit'),
                 $gpcWarning,
             ),
-            $this->lightswitch(
-                'autoInject',
-                t('Automatic injection', category: 'cookie-consent-kit'),
-                t('Places the banner as the first child of <body>, without touching any template. Turn this off only if the site needs to position it itself. The <head> bootstrap always stays automatic.', category: 'cookie-consent-kit'),
-            ),
+            $this->cataloguedSwitch('autoInject'),
         ]);
     }
 
-    private function lightswitch(string $name, string $label, string $instructions, ?string $warning = null): Field
+    /**
+     * A field whose label and help come from the core's catalogue, so the same
+     * setting reads the same wherever it is offered. The control stays this
+     * screen's: Craft CMS knows the site's languages and categories, which the
+     * catalogue cannot.
+     */
+    private function catalogued(string $name, Control $control, ?string $warning = null): Field
     {
-        return $this->field($name, $label, $instructions, Lightswitch::make($name), $warning);
+        $field = Catalogue::fields()[$name];
+
+        return $this->field($name, $this->wording($field['label']), $this->wording($field['help'] ?? ''), $control, $warning);
+    }
+
+    private function cataloguedSwitch(string $name, ?string $warning = null): Field
+    {
+        return $this->catalogued($name, Lightswitch::make($name), $warning);
+    }
+
+    /**
+     * A catalogue string as this screen shows it: `:tag` is the template call,
+     * and the backticks that mark code in a Markdown panel are dropped, since
+     * Craft CMS renders instructions as plain text.
+     */
+    private function wording(string $string): string
+    {
+        $translated = t($string, ['tag' => 'craft.consent.banner()'], category: 'cookie-consent-kit');
+
+        return str_replace('`', '', $translated);
     }
 
     private function field(string $name, string $label, string $instructions, Control $control, ?string $warning = null): Field

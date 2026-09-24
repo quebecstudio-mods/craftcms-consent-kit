@@ -27,7 +27,7 @@
     "require": {
         "php": "^8.5",
         "craftcms/cms": "^6.0.0",
-        "quebecstudio-mods/consent-kit-core": "^1.3"
+        "quebecstudio-mods/consent-kit-core": "^1.4"
     },
     "require-dev": {
         "laravel/pint": "^1.32",
@@ -55,10 +55,12 @@
         "style": "@php vendor/bin/pint --test",
         "stan": "@php -d memory_limit=512M vendor/bin/phpstan analyse --no-progress",
         "types": "@php -d memory_limit=512M vendor/bin/pest --type-coverage --compact --min=100",
+        "wording": "@php tools/check-wording.php",
         "check": [
             "@style",
             "@stan",
             "@types",
+            "@wording",
             "@test"
         ],
         "refactor": "@php -d memory_limit=512M vendor/bin/rector process --dry-run"

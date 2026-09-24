@@ -1,15 +1,29 @@
 # Changelog
 
+## 6.0.6 - 2026-09-24
+
+### Fixed
+
+- **Automatic injection said the wrong thing.** The settings screen described
+  the banner as the first child of `<body>`; it is appended to the end of it,
+  as the documentation has always said and as the code has always done. The
+  help now also names the call that places it by hand.
+
+### Changed
+
+- The label and help of every shared setting come from `consent-kit-core`, so
+  the same setting reads the same wherever it is offered. What this screen
+  words differently, because Craft CMS does, still says so here.
+
 ## 6.0.5 - 2026-09-24
 
 ### Changed
 
-- The English control panel reads its titles from the core, in the casing the
-  Statamic addon uses and that Craft CMS itself follows: title case for labels,
-  titles, headings and column names, sentence case for permissions, buttons,
-  links and options.
-- The wording is written once, in one spelling. Craft CMS substitutes `{name}`
-  where Laravel substitutes `:name`, and the core converts on the way in.
+- The English control panel follows one casing rule, the one Craft CMS titles
+  its own interface with: title case for labels, titles, headings and column
+  names, sentence case for permissions, buttons, links and options.
+- The wording is held once rather than copied into the plugin, so a correction
+  cannot land on half of it.
 
 ## 6.0.4 - 2026-09-23
 
@@ -19,8 +33,8 @@
   and origins a decision may carry, the columns it sorts on, and the date past
   which a record has outlived what it attests. They were declared here as well,
   and two copies of a rule are one too many.
-- The French control panel wording is read from the core, which the Statamic
-  addon reads too. It was an exact duplicate of 191 strings.
+- The French control panel wording is read from the core. It was an exact
+  duplicate of 191 strings.
 
 ## 6.0.3 - 2026-09-23
 
