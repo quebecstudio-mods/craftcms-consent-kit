@@ -50,7 +50,7 @@
 
     {{ forms.lightswitchField({
         label: 'Automatic injection'|t('cookie-consent-kit'),
-        instructions: 'Places the banner as the first child of <body>, without touching any template. Turn this off only if the site needs to position it itself. The <head> bootstrap always stays automatic.'|t('cookie-consent-kit'),
+        instructions: 'Places the banner at the end of <body>, without touching any template. Turn this off only if the site needs to position it itself, with craft.consent.banner(). The <head> bootstrap always stays automatic.'|t('cookie-consent-kit'),
         id: 'autoInject',
         name: 'autoInject',
         on: settings.autoInject,

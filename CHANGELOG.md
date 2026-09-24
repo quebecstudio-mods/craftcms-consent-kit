@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.0.4 - 2026-09-24
+
+### Fixed
+
+- **Automatic injection said the wrong thing.** The settings screen described
+  the banner as the first child of `<body>`; it is appended to the end of it,
+  as the documentation has always said and as the code has always done. The
+  help now also names the call that places it by hand.
+
+### Changed
+
+- The control panel wording comes from `consent-kit-core`, so the same setting
+  reads the same across the suite. What only this plugin says is still said
+  here. English titles follow the casing Craft CMS uses for its own.
+
 ## 5.0.3 - 2026-09-23
 
 ### Added
