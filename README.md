@@ -4,14 +4,61 @@ Cookie consent banner for **Craft CMS 6**, built for Quebec's Law 25 and usable
 under the GDPR. Craft CMS 5 is covered by the
 [`5.x` branch](https://github.com/quebecstudio-mods/craftcms-consent-kit/tree/5.x).
 
+**No third-party cookie is set before the visitor agrees**, and the markup is
+the same for every visitor, so pages stay cacheable.
 
-- No third-party cookie is set before consent.
-- Nothing to install beyond the plugin and its core package,
-  `quebecstudio-mods/consent-kit-core`, which rely on what Craft CMS already
-  ships.
-- No template change required.
-- English and French included; a project adds any language with one file.
-- YouTube videos load on click, with the thumbnail served by the site.
+> **Craft CMS 6 is in alpha, and so is this line.** The control panel screens
+> follow classes Craft CMS is still replacing, so they can change with it, and
+> a minor release may break what a minor release should not. The banner, the
+> cookie inventory and the consent register do their work; the screens around
+> them will settle when Craft CMS 6 does. Sites in production are better served
+> by the [`5.x` branch](https://github.com/quebecstudio-mods/craftcms-consent-kit/tree/5.x).
+
+## What it does
+
+- **A banner with the categories the site declares**, answered by accepting
+  everything, refusing everything, or choosing one category at a time. No
+  template change required.
+- **A cookie inventory** filled in the control panel, rendered as a table in the
+  privacy policy page, styled by the site's own CSS framework.
+- **YouTube videos load on click.** Nothing reaches Google before that, and the
+  thumbnail is served by the site.
+- **Any script or iframe waits for its category** — mark it and the plugin
+  activates it when consent arrives.
+- **Google Consent Mode and Matomo** are primed refused before any tag runs, and
+  updated the moment the visitor answers.
+- **Global Privacy Control is honoured**, and the banner can be skipped for
+  visitors who send it.
+- **Edited per site**, wording included, with the option to copy a site's
+  wording to another.
+- **English and French included.** A project adds a language with one file, or
+  overrides a single sentence.
+- **Templates are yours**, in Twig or Blade.
+
+### With the Pro edition
+
+- **A consent register**: every decision recorded server-side with the server's
+  clock, the site, the categories granted, and a fingerprint of the exact
+  wording that was on screen. The cookie's own timestamp lives on the visitor's
+  device and proves nothing.
+- **Read it in the control panel**, filtered by date, answer and site, with the
+  screen each decision was made on shown as it was worded then.
+- **Export to CSV, Excel or JSON.** The JSON carries the wording of every screen
+  and describes how the fingerprint is computed, so a third party can recompute
+  it without the plugin.
+- **Retention with Craft CMS's own housekeeping**, a purge utility, and three
+  permissions — viewing, exporting and purging — so producing a proof is not the
+  same trust as destroying one.
+
+## Editions
+
+| Edition | What it adds |
+|---|---|
+| Standard | The banner, the cookie inventory, the video facade |
+| Pro | The consent register: server-side proof of what was shown and answered |
+
+Everything already recorded stays readable, exportable and purgeable whatever
+the edition says.
 
 ## How it works
 

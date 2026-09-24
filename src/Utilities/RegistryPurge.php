@@ -19,12 +19,12 @@ class RegistryPurge extends Utility
 {
     public static function displayName(): string
     {
-        return t('Consent register', category: 'cookie-consent-kit');
+        return t('Consent purge', category: 'cookie-consent-kit');
     }
 
     public static function id(): string
     {
-        return 'consent-register';
+        return 'consent-purge';
     }
 
     public static function icon(): ?string

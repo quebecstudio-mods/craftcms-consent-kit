@@ -27,7 +27,7 @@
     "require": {
         "php": "^8.5",
         "craftcms/cms": "^6.0.0",
-        "quebecstudio-mods/consent-kit-core": "^1.4"
+        "quebecstudio-mods/consent-kit-core": "^1.5"
     },
     "require-dev": {
         "laravel/pint": "^1.32",
@@ -72,7 +72,7 @@
         "developer": "Québec Studio Mods",
         "developerUrl": "https://github.com/quebecstudio-mods",
         "developerEmail": "info@quebecstudio.com",
-        "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/6.x/README.md",
+        "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/6.x/README.md#documentation",
         "changelogUrl": "https://raw.githubusercontent.com/quebecstudio-mods/craftcms-consent-kit/6.x/CHANGELOG.md",
         "class": "QuebecStudioMods\\ConsentKit\\CraftCms\\Plugin",
         "branch-alias": {
