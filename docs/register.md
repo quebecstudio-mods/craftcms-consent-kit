@@ -88,8 +88,12 @@ months, so a proof outlives what it attests with room for a complaint. Zero
 keeps everything until it is purged by hand.
 
 The purge runs with Craft CMS's own garbage collection — no scheduler to
-install — and takes the screens nothing cites any more with it. The
-**Consent register** utility purges on demand.
+install — and takes the screens nothing cites any more with it. **Utilities → Consent
+Purge** purges on demand.
+
+Retention answers to the records, not to the setting. Turning the register off
+stops new decisions being written; it does not strand the ones already kept,
+which can carry an address and a user agent. They go on expiring.
 
 Purging frees nobody: consent lives in the visitor's cookie and keeps applying.
 What goes is the proof of it.

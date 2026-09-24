@@ -13,12 +13,12 @@ class RegistryPurge extends Utility
 {
     public static function displayName(): string
     {
-        return Craft::t('cookie-consent-kit', 'Consent register');
+        return Craft::t('cookie-consent-kit', 'Consent purge');
     }
 
     public static function id(): string
     {
-        return 'consent-register';
+        return 'consent-purge';
     }
 
     public static function icon(): ?string

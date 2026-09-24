@@ -27,7 +27,7 @@
     "require": {
         "php": ">=8.2",
         "craftcms/cms": "^5.0.0",
-        "quebecstudio-mods/consent-kit-core": "^1.4"
+        "quebecstudio-mods/consent-kit-core": "^1.5"
     },
     "autoload": {
         "psr-4": {
@@ -41,7 +41,7 @@
         "developer": "Québec Studio Mods",
         "developerUrl": "https://github.com/quebecstudio-mods",
         "developerEmail": "info@quebecstudio.com",
-        "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/5.x/README.md",
+        "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/5.x/README.md#documentation",
         "changelogUrl": "https://raw.githubusercontent.com/quebecstudio-mods/craftcms-consent-kit/5.x/CHANGELOG.md",
         "class": "QuebecStudioMods\\ConsentKit\\CraftCms\\Plugin",
         "branch-alias": {

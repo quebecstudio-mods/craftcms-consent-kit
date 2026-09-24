@@ -1,17 +1,21 @@
 {% import '_includes/forms' as forms %}
 
+{# What there is to delete, said where the deleting happens. #}
 {% if total %}
-    <p>
+    <p class="notice">
         {{ '{count} decisions recorded, the oldest on {date}.'|t('cookie-consent-kit', {
             count: total,
             date: oldest|date('short'),
         }) }}
     </p>
 {% else %}
-    <p class="light">{{ 'No decision recorded yet.'|t('cookie-consent-kit') }}</p>
+    <p class="notice">{{ 'No decision recorded yet.'|t('cookie-consent-kit') }}</p>
 {% endif %}
 
 {% if total and canPurge %}
+    <p>{{ 'Retention removes outlived records on its own. This is for a deletion that cannot wait.'|t('cookie-consent-kit') }}</p>
+
+    {# Said plainly: purging is not a favour to anyone. #}
     <p class="warning">
         {{ 'Purging frees nobody: consent lives in the visitor’s cookie and keeps applying. What goes is the proof of it, and a site that still acts on a consent it can no longer show has the worst of both.'|t('cookie-consent-kit') }}
     </p>
@@ -20,21 +24,36 @@
         {{ csrfInput() }}
         {{ actionInput('cookie-consent-kit/registry/purge') }}
 
-        {{ forms.selectField({
-            label: 'Delete records older than'|t('cookie-consent-kit'),
-            instructions: 'Retention removes outlived records on its own. This is for a deletion that cannot wait.'|t('cookie-consent-kit'),
-            name: 'months',
-            options: [
-                { label: '{n} months'|t('cookie-consent-kit', { n: 36 }), value: 36 },
-                { label: '{n} months'|t('cookie-consent-kit', { n: 24 }), value: 24 },
-                { label: '{n} months'|t('cookie-consent-kit', { n: 12 }), value: 12 },
-                { label: '{n} months'|t('cookie-consent-kit', { n: 6 }), value: 6 },
-                { label: 'All records'|t('cookie-consent-kit'), value: 0 },
-            ],
-            value: 36,
-        }) }}
+        {# The label names the whole action, so it sits above the row rather
+           than inside the narrow field, where it would wrap. #}
+        <div class="field" style="margin-bottom: 0">
+            <div class="heading">
+                <label for="consent-purge-months">
+                    {{ 'Delete records older than'|t('cookie-consent-kit') }}
+                </label>
+            </div>
 
-        <button type="submit" class="btn submit">{{ 'Purge'|t('cookie-consent-kit') }}</button>
+            {# Spelled out: Craft CMS has no `items-end`, and its `flex` sets no gap. #}
+            <div class="input flex" style="align-items: flex-end; gap: var(--s)">
+                <div style="width: 12rem">
+                    {{ forms.select({
+                        id: 'consent-purge-months',
+                        class: 'fullwidth',
+                        name: 'months',
+                        options: [
+                            { label: '{n} months'|t('cookie-consent-kit', { n: 36 }), value: 36 },
+                            { label: '{n} months'|t('cookie-consent-kit', { n: 24 }), value: 24 },
+                            { label: '{n} months'|t('cookie-consent-kit', { n: 12 }), value: 12 },
+                            { label: '{n} months'|t('cookie-consent-kit', { n: 6 }), value: 6 },
+                            { label: 'All records'|t('cookie-consent-kit'), value: 0 },
+                        ],
+                        value: 36,
+                    }) }}
+                </div>
+
+                <button type="submit" class="btn submit">{{ 'Purge'|t('cookie-consent-kit') }}</button>
+            </div>
+        </div>
     </form>
 {% elseif total %}
     <p class="light">{{ 'You do not have permission to purge the register.'|t('cookie-consent-kit') }}</p>

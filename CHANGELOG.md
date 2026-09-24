@@ -1,5 +1,29 @@
 # Changelog
 
+## 5.0.5 - 2026-09-24
+
+### Added
+
+- A check that every string the plugin asks to translate resolves, run with the
+  rest. Nothing here renders a screen, so nothing else would notice a key the
+  wording no longer carries.
+
+### Changed
+
+- **The purge utility is called Consent Purge**, which is what it does. It was
+  named after the register it empties. Its screen reads like the same screen in
+  the other integrations: the count and the caution as notices, the period and
+  the button side by side.
+- The README opens on what the plugin does and what the Pro edition adds,
+  rather than on how it is put together.
+- The register's documentation names the purge utility as the panel shows it,
+  and says that retention answers to the records rather than to the setting:
+  turning the register off stops new decisions being written, it does not
+  strand the ones already kept.
+- The Plugin Store's documentation link opens on the documentation.
+- The French says “enregistrement” for a record, which is what the core now
+  says everywhere. “Entrée” is what Craft CMS calls a content entry.
+
 ## 5.0.4 - 2026-09-24
 
 ### Fixed
