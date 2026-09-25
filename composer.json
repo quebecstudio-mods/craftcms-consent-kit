@@ -69,7 +69,7 @@
         "handle": "cookie-consent-kit",
         "name": "Cookie Consent Kit",
         "description": "Opt-in cookie consent for Craft CMS: no third-party cookie, script or embed loads before the visitor agrees. Built for Quebec's Law 25 and the GDPR.",
-        "developer": "Québec Studio Mods",
+        "developer": "Québec Studio",
         "developerUrl": "https://github.com/quebecstudio-mods",
         "developerEmail": "info@quebecstudio.com",
         "documentationUrl": "https://github.com/quebecstudio-mods/craftcms-consent-kit/blob/6.x/README.md#documentation",
