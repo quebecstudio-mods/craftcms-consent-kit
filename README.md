@@ -106,8 +106,11 @@ for the first steps.
 
 ## Licence
 
-Free to use on any number of sites. Paid editions, when offered, require a
-licence per production environment. See [LICENSE.md](LICENSE.md).
+The [Craft License](LICENSE.md).
+
+**Standard is free**, on any number of sites, personal or commercial. Nothing is
+owed for it, so no payment notice will ever be sent. **Pro** takes one licence
+per production environment.
 
 The plugin helps collect consent. It is not legal advice and does not by itself
 make a website compliant.

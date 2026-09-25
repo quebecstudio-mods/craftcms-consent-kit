@@ -1,19 +1,3 @@
-# Licence
-
-Cookie Consent Kit is licensed under [the Craft License](https://github.com/craftcms/license),
-reproduced below without modification.
-
-How it applies here:
-
-- **The free edition is free.** It is provided at no charge, and the copyright
-  holder grants that it may be installed in any number of production
-  environments, personal or commercial. No payment is owed for it, so no
-  notice under condition 4 will ever be sent.
-- **Paid editions**, where offered, require one licensed copy per production
-  environment, as stated in condition 2.
-
----
-
 Copyright © Québec Studio
 
 Permission is hereby granted to any person obtaining a copy of this software
@@ -21,14 +5,14 @@ Permission is hereby granted to any person obtaining a copy of this software
 of the Software, and to permit persons to whom the Software is furnished to do
 so, subject to the following conditions:
 
-1. **Don't plagiarize.** The above copyright notice and this license shall be
+1. **Don’t plagiarize.** The above copyright notice and this license shall be
    included in all copies or substantial portions of the Software.
 
-2. **Don't use the same license on more than one project.** Each licensed copy
+2. **Don’t use the same license on more than one project.** Each licensed copy
    of the Software shall be actively installed in no more than one production
    environment at a time.
 
-3. **Don't mess with the licensing features.** Software features related to
+3. **Don’t mess with the licensing features.** Software features related to
    licensing shall not be altered or circumvented in any way, including (but
    not limited to) license validation, payment prompts, feature restrictions,
    and update eligibility.

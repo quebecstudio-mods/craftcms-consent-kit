@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.0.6 - 2026-09-25
+
+### Fixed
+
+- `LICENSE.md` reproduces the Craft License exactly. It carried an explanation
+  of how the licence applies here, ahead of the text, and straight apostrophes
+  where the original has typographic ones. What the explanation said is in the
+  README, where it belongs.
+
 ## 5.0.5 - 2026-09-24
 
 ### Added
