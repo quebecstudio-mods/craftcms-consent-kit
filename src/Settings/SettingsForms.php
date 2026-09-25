@@ -513,7 +513,7 @@ final class SettingsForms
         if (!$decisions->canEnable()) {
             $fields[] = MarkdownContent::make('registry-edition', implode(' ', [
                 '**' . t('Pro', category: 'cookie-consent-kit') . '**',
-                t('Keeping a server-side register is part of the Pro edition. Standard collects and honours consent; Pro archives the proof.', category: 'cookie-consent-kit'),
+                t('Keeping a server-side register is part of the Pro edition. The free edition collects and honours consent; Pro archives the proof.', category: 'cookie-consent-kit'),
             ]));
 
             if ($decisions->isSuspended()) {

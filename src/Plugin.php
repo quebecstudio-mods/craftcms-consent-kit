@@ -51,7 +51,7 @@ class Plugin extends BasePlugin
 {
     public const string NAME = 'Cookie Consent Kit';
 
-    public const string EDITION_STANDARD = 'standard';
+    public const string EDITION_LITE = 'lite';
 
     public const string EDITION_PRO = 'pro';
 
@@ -87,12 +87,11 @@ class Plugin extends BasePlugin
     }
 
     /**
-     * `standard` stays first: it is the handle every install already carries,
-     * and the order is what `is()` compares.
+     * `lite` stays first: the order is what `is()` compares.
      */
     public static function editions(): array
     {
-        return [self::EDITION_STANDARD, self::EDITION_PRO];
+        return [self::EDITION_LITE, self::EDITION_PRO];
     }
 
     public function register(): void
