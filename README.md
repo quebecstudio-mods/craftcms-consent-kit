@@ -47,7 +47,7 @@ the same for every visitor, so pages stay cacheable.
 
 | Edition | What it adds |
 |---|---|
-| Standard | The banner, the cookie inventory, the video facade |
+| Lite | The banner, the cookie inventory, the video facade |
 | Pro | The consent register: server-side proof of what was shown and answered |
 
 Everything already recorded stays readable, exportable and purgeable whatever
@@ -108,7 +108,7 @@ for the first steps.
 
 The [Craft License](LICENSE.md).
 
-**Standard is free**, on any number of sites, personal or commercial. Nothing is
+**Lite is free**, on any number of sites, personal or commercial. Nothing is
 owed for it, so no payment notice will ever be sent. **Pro** takes one licence
 per production environment.
 

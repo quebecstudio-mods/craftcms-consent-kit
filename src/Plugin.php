@@ -52,7 +52,7 @@ class Plugin extends BasePlugin
 {
     public const NAME = 'Cookie Consent Kit';
 
-    public const EDITION_STANDARD = 'standard';
+    public const EDITION_LITE = 'lite';
 
     public const EDITION_PRO = 'pro';
 
@@ -70,12 +70,11 @@ class Plugin extends BasePlugin
     public bool $hasReadOnlyCpSettings = true;
 
     /**
-     * `standard` stays first: it is the handle every install already carries,
-     * and the order is what `is()` compares.
+     * `lite` stays first: the order is what `is()` compares.
      */
     public static function editions(): array
     {
-        return [self::EDITION_STANDARD, self::EDITION_PRO];
+        return [self::EDITION_LITE, self::EDITION_PRO];
     }
 
     public static function config(): array

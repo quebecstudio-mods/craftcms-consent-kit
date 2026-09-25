@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.7 - 2026-09-25
+
+### Changed
+
+- The free edition's handle is `lite`. An install stored as `standard` runs
+  on `lite`, the first edition Craft CMS finds.
+- The register section names the free edition rather than its handle.
+
 ## 5.0.6 - 2026-09-25
 
 ### Fixed
