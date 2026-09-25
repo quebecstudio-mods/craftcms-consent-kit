@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.8 - 2026-09-25
+
+### Changed
+
+- The developer name the control panel shows is Québec Studio.
+
 ## 5.0.7 - 2026-09-25
 
 ### Changed
