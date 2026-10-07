@@ -415,6 +415,7 @@ final class SettingsForms
                     ['label' => t('Bottom right corner', category: 'cookie-consent-kit'), 'value' => 'corner-right'],
                 ]),
             ),
+            $this->cataloguedSwitch('reserveSpace'),
             $this->field(
                 'templateRoot',
                 t('Template folder', category: 'cookie-consent-kit'),

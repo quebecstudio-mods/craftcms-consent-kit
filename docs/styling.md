@@ -135,7 +135,7 @@ the colour set too:
 
 ## Display mode
 
-`displayMode` places the banner, always fixed at the bottom of the screen:
+`displayMode` places the banner at the bottom of the screen, fixed unless `reserveSpace` is on (see below):
 
 | Value | Banner |
 | --- | --- |
@@ -155,6 +155,24 @@ qsm-consent-kit {
     --qsm-ck-box-width: 24rem;
     --qsm-ck-offset: 1rem;
 }
+```
+
+### Keeping the end of the page visible
+
+A fixed banner covers the bottom of the page: the footer stays behind it until
+the visitor decides. With `reserveSpace` on, the full-width banner is sticky
+instead, so it takes its own height at the end of the page and covers nothing.
+Its height animates in place of the slide and the fade, so that space opens and
+closes with the banner. It applies to `full`, and to every mode under `40rem`;
+the boxes of the other modes stay fixed.
+
+The banner must sit at the end of `<body>`, where `autoInject` puts it: a sticky
+element only travels within its parent. Below the body, while the space closes at
+the end of the page or when the page bounces, the browser shows the `<html>`
+background. Give it the footer's colour so nothing white shows:
+
+```css
+html { background: var(--footer-bg); }
 ```
 
 ## Several sites, several styles

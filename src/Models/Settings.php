@@ -112,6 +112,12 @@ class Settings extends PluginSettings
     public string $displayMode = 'full';
 
     /**
+     * Whether the full-width banner keeps the end of the page visible: sticky
+     * rather than fixed, its height opening and closing with it.
+     */
+    public bool $reserveSpace = false;
+
+    /**
      * Tab shown once a choice has been made. A site turning it off must
      * provide its own entry point calling `window.qsmConsentKit.open()`.
      */
@@ -223,6 +229,7 @@ class Settings extends PluginSettings
             'videoFacade' => ['boolean'],
             'videoThumbnails' => ['boolean'],
             'gpcHidesBanner' => ['boolean'],
+            'reserveSpace' => ['boolean'],
             'categories' => ['array'],
             'policySource' => ['array'],
             'policyEntry' => ['array'],

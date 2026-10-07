@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.1.0 - 2026-10-06
+
+### Added
+
+- **Keep the end of the page visible** (`reserveSpace`), under Appearance. The
+  full-width banner becomes sticky, so it takes its own height at the end of the
+  page instead of covering the footer, and that space opens and closes with it.
+  Off by default.
+
+### Fixed
+
+- The plugin boots again on Craft CMS 6.0.0-alpha.19, which creates plugin
+  settings through `createSettings()`.
+
 ## 6.0.10 - 2026-09-25
 
 ### Changed

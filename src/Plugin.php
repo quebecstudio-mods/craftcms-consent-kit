@@ -6,6 +6,7 @@ use CraftCms\Cms\Cp\Data\NavItem;
 use CraftCms\Cms\GarbageCollection\Events\RunningGarbageCollection;
 use CraftCms\Cms\Plugin\Events\PluginInstalled;
 use CraftCms\Cms\Plugin\Plugin as BasePlugin;
+use CraftCms\Cms\Plugin\PluginSettings;
 use CraftCms\Cms\Support\Facades\Path;
 use CraftCms\Cms\Support\Url;
 
@@ -17,7 +18,6 @@ use CraftCms\Cms\Twig\Events\TwigCreated;
 use CraftCms\Cms\Twig\Variables\CraftVariable;
 use CraftCms\Cms\User\Data\Permission;
 use CraftCms\Cms\Utility\Utility;
-use CraftCms\Cms\Validation\Contracts\Validatable;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
@@ -205,7 +205,7 @@ class Plugin extends BasePlugin
         Event::listen(PluginInstalled::class, SeedCategories::class);
     }
 
-    protected function createSettingsModel(): ?Validatable
+    protected static function createSettings(): ?PluginSettings
     {
         return new Settings();
     }
