@@ -56,6 +56,16 @@
         warning: helper.lockNote(overrides, 'displayMode'),
     }) }}
 
+    {{ forms.lightswitchField({
+        label: 'Keep the end of the page visible'|t('cookie-consent-kit'),
+        instructions: 'The full-width banner takes its own height at the end of the page instead of covering the footer, and that space opens and closes with it. Applies to the full-width mode, and to every mode on a narrow screen. The banner must sit at the end of `<body>`, where automatic injection puts it.'|t('cookie-consent-kit'),
+        id: 'reserveSpace',
+        name: 'reserveSpace',
+        on: settings.reserveSpace,
+        disabled: overrides.reserveSpace is defined,
+        warning: helper.lockNote(overrides, 'reserveSpace'),
+    }) }}
+
     {{ forms.textField({
         label: 'Template folder'|t('cookie-consent-kit'),
         instructions: 'A template placed in this folder of the site overrides the plugin’s own. For example templates/_consent/banner.twig.'|t('cookie-consent-kit'),

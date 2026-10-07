@@ -109,6 +109,12 @@ class Settings extends Model
     public string $displayMode = 'full';
 
     /**
+     * Whether the full-width banner keeps the end of the page visible: sticky
+     * rather than fixed, its height opening and closing with it.
+     */
+    public bool $reserveSpace = false;
+
+    /**
      * Tab shown once a choice has been made. A site turning it off must
      * provide its own entry point calling `window.qsmConsentKit.open()`.
      */
@@ -210,7 +216,7 @@ class Settings extends Model
             ['colorScheme', 'in', 'range' => ['light', 'dark', 'auto']],
             ['displayMode', 'in', 'range' => Defaults::DISPLAY_MODES],
             ['reopenPosition', 'in', 'range' => Defaults::REOPEN_POSITIONS],
-            [['autoInject', 'reopenButton', 'videoFacade', 'videoThumbnails', 'gpcHidesBanner'], 'boolean'],
+            [['autoInject', 'reopenButton', 'videoFacade', 'videoThumbnails', 'gpcHidesBanner', 'reserveSpace'], 'boolean'],
             [['registry', 'registryUser', 'registryRequestContext'], 'boolean'],
             ['registryGrace', 'integer', 'min' => 0],
             [['categories', 'policyEntry', 'policyUrl', 'policySource', 'inventoryClasses'], 'safe'],

@@ -19,6 +19,7 @@ is covered by [Configuration](configuration.md).
 | `colorScheme` | string | `auto` | `auto`, `light` or `dark`. |
 | `backdropStyle` | string | `blur` | Behind the manage panel: `blur`, `dim` or `none`. |
 | `displayMode` | string | `full` | `full`, `floating`, `corner-left` or `corner-right`. Full width under `40rem`. See [Styling](styling.md#display-mode). |
+| `reserveSpace` | bool | `false` | The full-width banner keeps the end of the page visible: sticky rather than fixed, its height opening and closing with it. See [Styling](styling.md#keeping-the-end-of-the-page-visible). |
 | `reopenButton` | bool | `true` | Tab that reopens the banner once a decision is stored. |
 | `reopenPosition` | string | `auto` | Side of that tab: `left`, `right`, or `auto`, which follows `displayMode` (right for `corner-right`). |
 | `gpcHidesBanner` | bool | `true` | Skips the banner for a browser sending Global Privacy Control. |
