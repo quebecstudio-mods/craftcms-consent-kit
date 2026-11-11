@@ -4,9 +4,6 @@ namespace QuebecStudioMods\ConsentKit\CraftCms\Controllers;
 
 use CraftCms\Cms\Config\GeneralConfig;
 use CraftCms\Cms\Cp\Data\NavItem;
-use CraftCms\Cms\Form\Enums\ControlMode;
-use CraftCms\Cms\Form\FormContext;
-use CraftCms\Cms\Form\FormResolver;
 use CraftCms\Cms\Http\RespondsWithFlash;
 use CraftCms\Cms\Http\Responses\CpScreenResponse;
 use CraftCms\Cms\Site\Data\Site;
@@ -15,6 +12,8 @@ use CraftCms\Cms\Support\Url;
 
 use function CraftCms\Cms\t;
 
+use CraftCms\Cms\Ui\Enums\ControlMode;
+use CraftCms\Cms\Ui\UiContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -37,7 +36,6 @@ final class SettingsController
     public function __construct(
         private readonly SettingsStore $store,
         private readonly GeneralConfig $generalConfig,
-        private readonly FormResolver $formResolver,
     ) {
     }
 
@@ -74,12 +72,11 @@ final class SettingsController
                 ['label' => $panes[$pane]],
             ])
             ->subnav($this->subnav($pane, $site))
-            ->inertiaPage('Form', [
+            ->ui($forms->form($pane), new UiContext(
+                namespace: 'settings',
+                values: $forms->values($copyFrom ? app(Consent::class)->resolver($copyFrom->id) : null),
+            ), props: [
                 'readOnly' => $readOnly,
-                'form' => $this->formResolver->resolve($forms->form($pane), new FormContext(
-                    namespace: 'settings',
-                    values: $forms->values($copyFrom ? app(Consent::class)->resolver($copyFrom->id) : null),
-                )),
                 'submit' => [
                     'method' => 'post',
                     'url' => $this->paneUrl($pane, $site),
@@ -144,6 +141,6 @@ final class SettingsController
     {
         $params = Sites::getAllSites()->count() > 1 ? ['site' => $site->handle] : null;
 
-        return Url::cpUrl("cookie-consent-kit/settings/$pane", $params);
+        return Url::cpUrl("settings/plugins/cookie-consent-kit/$pane", $params);
     }
 }

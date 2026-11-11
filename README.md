@@ -7,7 +7,7 @@ under the GDPR. Craft CMS 5 is covered by the
 **No third-party cookie is set before the visitor agrees**, and the markup is
 the same for every visitor, so pages stay cacheable.
 
-> **Craft CMS 6 is in alpha, and so is this line.** The control panel screens
+> **Craft CMS 6 is in beta, and so is this line.** The control panel screens
 > follow classes Craft CMS is still replacing, so they can change with it, and
 > a minor release may break what a minor release should not. The banner, the
 > cookie inventory and the consent register do their work; the screens around

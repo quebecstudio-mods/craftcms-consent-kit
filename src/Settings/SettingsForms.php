@@ -4,26 +4,27 @@ namespace QuebecStudioMods\ConsentKit\CraftCms\Settings;
 
 use CraftCms\Cms\Cp\SelectOptions;
 use CraftCms\Cms\Entry\Elements\Entry;
-use CraftCms\Cms\Form\Controls\Choice;
-use CraftCms\Cms\Form\Controls\Control;
-use CraftCms\Cms\Form\Controls\ElementSelect;
-use CraftCms\Cms\Form\Controls\Lightswitch;
-use CraftCms\Cms\Form\Controls\Number;
-use CraftCms\Cms\Form\Controls\Table;
-use CraftCms\Cms\Form\Controls\Text;
-use CraftCms\Cms\Form\Controls\Textarea;
-use CraftCms\Cms\Form\Enums\ChoicePresentation;
-use CraftCms\Cms\Form\Enums\ControlMode;
-use CraftCms\Cms\Form\Form;
-use CraftCms\Cms\Form\Nodes\Field;
-use CraftCms\Cms\Form\Nodes\Heading;
-use CraftCms\Cms\Form\Nodes\HiddenField;
-use CraftCms\Cms\Form\Nodes\MarkdownContent;
 use CraftCms\Cms\Site\Data\Site;
 use CraftCms\Cms\Support\Url;
 
 use function CraftCms\Cms\t;
 
+use CraftCms\Cms\Ui\Controls\Choice;
+use CraftCms\Cms\Ui\Controls\Control;
+use CraftCms\Cms\Ui\Controls\ElementSelect;
+use CraftCms\Cms\Ui\Controls\Lightswitch;
+use CraftCms\Cms\Ui\Controls\Number;
+use CraftCms\Cms\Ui\Controls\Table;
+use CraftCms\Cms\Ui\Controls\Text;
+use CraftCms\Cms\Ui\Controls\Textarea;
+use CraftCms\Cms\Ui\Enums\ChoicePresentation;
+use CraftCms\Cms\Ui\Enums\ControlMode;
+use CraftCms\Cms\Ui\Nodes\Callout;
+use CraftCms\Cms\Ui\Nodes\Field;
+use CraftCms\Cms\Ui\Nodes\Heading;
+use CraftCms\Cms\Ui\Nodes\HiddenField;
+use CraftCms\Cms\Ui\Nodes\MarkdownContent;
+use CraftCms\Cms\Ui\Ui;
 use InvalidArgumentException;
 use Locale;
 use QuebecStudioMods\ConsentKit\Core\Defaults;
@@ -150,7 +151,7 @@ final class SettingsForms
         return ['cookies'];
     }
 
-    public function form(string $pane): Form
+    public function form(string $pane): Ui
     {
         return match ($pane) {
             'general' => $this->general(),
@@ -165,12 +166,12 @@ final class SettingsForms
         };
     }
 
-    private function policy(): Form
+    private function policy(): Ui
     {
         $id = $this->site->id;
         $perSite = $this->multisite() ? t('This choice is made per site.', category: 'cookie-consent-kit') : null;
 
-        return Form::make([
+        return Ui::make([
             ...$this->siteSwitcher('policy'),
             Field::make(
                 t('Link to', category: 'cookie-consent-kit'),
@@ -200,7 +201,7 @@ final class SettingsForms
         ]);
     }
 
-    private function cookies(): Form
+    private function cookies(): Ui
     {
         $fields = [
             ...$this->siteSwitcher('cookies'),
@@ -236,7 +237,7 @@ final class SettingsForms
             Choice::make('marketingCategory')->presentation(ChoicePresentation::Select)->options($this->categoryOptions(t('None', category: 'cookie-consent-kit'))),
         );
 
-        return Form::make($fields);
+        return Ui::make($fields);
     }
 
     /** What the banner shows for each category, as a compliance check. */
@@ -322,7 +323,7 @@ final class SettingsForms
         $links = array_map(
             fn (Site $site) => $site->id === $this->site->id
                 ? '**' . $site->getName() . '**'
-                : '[' . $site->getName() . '](' . Url::cpUrl("cookie-consent-kit/settings/$pane", ['site' => $site->handle]) . ')',
+                : '[' . $site->getName() . '](' . Url::cpUrl("settings/plugins/cookie-consent-kit/$pane", ['site' => $site->handle]) . ')',
             $this->sites
         );
 
@@ -343,7 +344,7 @@ final class SettingsForms
         }
 
         $links = array_map(
-            fn (Site $site) => '[' . $site->getName() . '](' . Url::cpUrl("cookie-consent-kit/settings/$pane", ['site' => $this->site->handle, 'copyFrom' => $site->handle]) . ')',
+            fn (Site $site) => '[' . $site->getName() . '](' . Url::cpUrl("settings/plugins/cookie-consent-kit/$pane", ['site' => $this->site->handle, 'copyFrom' => $site->handle]) . ')',
             $others
         );
 
@@ -387,7 +388,7 @@ final class SettingsForms
         return (string)$value;
     }
 
-    private function appearance(): Form
+    private function appearance(): Ui
     {
         $fields = [
             $this->catalogued(
@@ -456,7 +457,7 @@ final class SettingsForms
             }
         }
 
-        return Form::make($fields);
+        return Ui::make($fields);
     }
 
     private function inventoryElementLabels(): array
@@ -475,9 +476,9 @@ final class SettingsForms
         ];
     }
 
-    private function general(): Form
+    private function general(): Ui
     {
-        return Form::make([
+        return Ui::make([
             $this->field(
                 'defaultLanguage',
                 t('Fallback language', category: 'cookie-consent-kit'),
@@ -487,9 +488,9 @@ final class SettingsForms
         ]);
     }
 
-    private function cookie(): Form
+    private function cookie(): Ui
     {
-        return Form::make([
+        return Ui::make([
             $this->catalogued(
                 'cookieName',
                 Text::make('cookieName')->textExpanderTriggers(SelectOptions::getEnvTextExpanderTriggers()),
@@ -505,23 +506,23 @@ final class SettingsForms
         ]);
     }
 
-    private function registry(): Form
+    private function registry(): Ui
     {
         $decisions = app(Decisions::class);
         $collecting = $decisions->isCollecting();
         $fields = [];
 
         if (!$decisions->canEnable()) {
-            $fields[] = MarkdownContent::make('registry-edition', implode(' ', [
+            $fields[] = Callout::make('registry-edition', implode(' ', [
                 '**' . t('Pro', category: 'cookie-consent-kit') . '**',
                 t('Keeping a server-side register is part of the Pro edition. The free edition collects and honours consent; Pro archives the proof.', category: 'cookie-consent-kit'),
-            ]));
+            ]))->icon('gem');
 
             if ($decisions->isSuspended()) {
-                $fields[] = MarkdownContent::make(
+                $fields[] = Callout::make(
                     'registry-suspended',
                     t('This install asks for a register in its configuration. Without the Pro edition it stays dormant, and nothing is written. Records already kept remain readable, exportable and purgeable.', category: 'cookie-consent-kit'),
-                );
+                )->variant('warning');
             }
         }
 
@@ -547,10 +548,10 @@ final class SettingsForms
             Number::make('registryGrace'),
         );
 
-        return Form::make($fields);
+        return Ui::make($fields);
     }
 
-    private function video(): Form
+    private function video(): Ui
     {
         $facadeWarning = $this->settings->videoFacade
             ? null
@@ -575,16 +576,16 @@ final class SettingsForms
             );
         }
 
-        return Form::make($fields);
+        return Ui::make($fields);
     }
 
-    private function behaviour(): Form
+    private function behaviour(): Ui
     {
         $gpcWarning = $this->settings->gpcHidesBanner && !$this->settings->reopenButton
             ? t('The banner is skipped for these visitors and the reopen tab is off, so they have no way to accept unless the site provides its own entry point.', category: 'cookie-consent-kit')
             : null;
 
-        return Form::make([
+        return Ui::make([
             $this->cataloguedSwitch(
                 'reopenButton',
             ),

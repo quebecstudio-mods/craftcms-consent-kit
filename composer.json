@@ -26,7 +26,7 @@
     },
     "require": {
         "php": "^8.5",
-        "craftcms/cms": "^6.0.0-alpha.19",
+        "craftcms/cms": "^6.0.0-beta.1",
         "quebecstudio-mods/consent-kit-core": "^1.6.0"
     },
     "require-dev": {

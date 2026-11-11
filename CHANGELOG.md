@@ -1,5 +1,21 @@
 # Changelog
 
+## 6.1.1 - 2026-11-11
+
+### Changed
+
+- Requires Craft CMS 6.0.0-beta.1 or later.
+- The settings screens live under the plugin's settings URL,
+  `settings/plugins/cookie-consent-kit/<pane>`, so the settings navigation keeps
+  Cookie Consent Kit selected. The former URLs redirect there.
+- The Register pane shows the Pro edition note, and the note about a register
+  left dormant without Pro, in the control panel's own callouts.
+
+### Fixed
+
+- The settings screens open again on Craft CMS 6.0.0-beta.1, which renamed the
+  control panel Form API to the UI API (`CraftCms\Cms\Ui`).
+
 ## 6.1.0 - 2026-10-06
 
 ### Added

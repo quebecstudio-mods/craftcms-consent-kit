@@ -32,6 +32,7 @@ use QuebecStudioMods\ConsentKit\CraftCms\Services\Consent;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Decisions;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\Presentations;
 use QuebecStudioMods\ConsentKit\CraftCms\Services\SettingsStore;
+use QuebecStudioMods\ConsentKit\CraftCms\Settings\SettingsForms;
 use QuebecStudioMods\ConsentKit\CraftCms\Utilities\RegistryPurge;
 use QuebecStudioMods\ConsentKit\CraftCms\Variables\ConsentVariable;
 
@@ -160,11 +161,15 @@ class Plugin extends BasePlugin
 
     /**
      * Craft's standard settings page leads to the plugin's own screens, which
-     * save without writing config-file values into the project config.
+     * save without writing config-file values into the project config. They
+     * live under its URL, so the settings nav keeps the plugin selected; the
+     * redirect names a pane, as the bare URL is Craft's own route.
      */
     public function getSettingsResponse(): mixed
     {
-        return redirect(Url::cpUrl('cookie-consent-kit/settings'));
+        $pane = array_key_first(SettingsForms::panes());
+
+        return redirect(Url::cpUrl("settings/plugins/cookie-consent-kit/$pane"));
     }
 
     public function getReadOnlySettingsResponse(): mixed
